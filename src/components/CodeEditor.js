@@ -4,70 +4,56 @@ import { CodeJar } from 'codejar';
 
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
-hljs.registerLanguage('javascript', javascript);
 import xml from 'highlight.js/lib/languages/xml';
-hljs.registerLanguage('xml', xml);
 import css from 'highlight.js/lib/languages/css';
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('xml', xml);
 hljs.registerLanguage('css', css);
+
+const highlight = (editor) => {
+  // highlight.js does not strip its previous markup, so reset to plain text.
+  editor.textContent = editor.textContent;
+  // highlight.js >= 11.8 skips elements it has already highlighted.
+  delete editor.dataset.highlighted;
+  hljs.highlightElement(editor);
+};
 
 const CodeEditor = (props) => {
   const ref = useRef(null);
-  const [code, _code] = useState(props.code);
-  const [jar, _jar] = useState(null);
+  const [code, setCode] = useState(props.code);
 
   useEffect(() => {
-    if (ref && ref.current) {
-      const cj = CodeJar(
-        ref.current,
-        (editor) => {
-          // highlight.js does not trim old tags,
-          // let's do it by this hack.
-          editor.textContent = editor.textContent;
-          // highlight.js >= 11.8 skips elements it has already highlighted.
-          delete editor.dataset.highlighted;
-          hljs.highlightElement(editor);
-        },
-        {
-          tab: '\t',
-          indentOn: /[(\[]$/,
-          addClosing: false,
-          spellcheck: false,
-        },
-      );
+    const jar = CodeJar(ref.current, highlight, {
+      tab: '\t',
+      indentOn: /[(\[]$/,
+      addClosing: false,
+      spellcheck: false,
+    });
+    jar.updateCode(code);
+    jar.onUpdate(setCode);
 
-      cj.updateCode(code);
-      cj.onUpdate((code) => {
-        _code(code);
-      });
+    // Lets the cell replace the code, e.g. after formatting it.
+    props.onReady({
+      setter: (next) => {
+        setCode(next);
+        jar.updateCode(next);
+      },
+    });
 
-      props.set_code({
-        setter: (c) => {
-          _code(c);
-          cj && cj.updateCode(c);
-        },
-      });
-
-      _jar(cj);
-    }
-
-    return () => {
-      jar && jar.destroy();
-    };
+    return () => jar.destroy();
   }, []);
 
   useEffect(() => {
-    if (props.onUpdate) {
-      props.onUpdate(code);
-    }
+    props.onUpdate?.(code);
   }, [code]);
 
-  return html`<div class="EditorWrapper" tabindex=${props.index + ''}>
+  return html`<div class="EditorWrapper" tabindex=${props.index}>
     <div
       ref=${ref}
       class="CodeEditor editor language-js"
-      onKeyDown=${props.onKeypress}
+      onKeyDown=${props.onKeyDown}
     ></div>
-  </div> `;
+  </div>`;
 };
 
 export default CodeEditor;

@@ -1,90 +1,65 @@
 import { html } from 'htm/preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import CodeEditor from './CodeEditor.js';
 import beautify from 'js-beautify/js/src/javascript';
+import CodeEditor from './CodeEditor.js';
 import IridiumIconButton from './IridiumIconButton.js';
 
-const get_cell_type = (og_source) => {
-  const source = ('' + og_source).trimStart();
-  if (source) {
-    if (source.match(/^viewof /)) {
-      return 'viewof';
-    } else if (source.match(/^mutable /)) {
-      return 'mutable';
-    } else if (source.match(/^import /)) {
-      return 'import';
-    } else {
-      return '';
-    }
-  } else {
-    return '';
-  }
-};
+// A class on the results that styles can key off: viewof, mutable or import.
+const cellType = (source) =>
+  String(source).trimStart().match(/^(viewof|mutable|import) /)?.[1] ?? '';
 
 const IridiumCell = (props) => {
   const ref = useRef(null);
-  const [error, _error] = useState(null);
-  const [sourceCode, _sourceCode] = useState(props.sourceCode || '');
-  const [savedSourceCode, _savedSourceCode] = useState(null);
+  const [error, setError] = useState(null);
+  const [sourceCode, setSourceCode] = useState(props.sourceCode || '');
+  const [savedSourceCode, setSavedSourceCode] = useState(null);
   const run = useRef(null); // { root, state } of the current definition
-  const [setSource, _setSource] = useState(null);
+  const [editor, setEditor] = useState(null); // { setter } from CodeEditor
   const unsaved = savedSourceCode !== sourceCode;
-  const cell_type = get_cell_type(sourceCode);
 
   // Deletes the cell's variables and detaches their output, so a late update
   // from a deleted variable cannot draw over the next run.
-  const _clear = () => {
+  const clear = () => {
     if (!run.current) return;
     props.notebook.dispose(run.current.state);
     run.current.root.remove();
     run.current = null;
   };
 
-  const _onDelete = () => {
+  const onDelete = () => {
     props.onDelete();
-    _clear();
+    clear();
   };
 
-  const _onSave = () => {
-    _savedSourceCode(sourceCode);
+  const onRun = () => {
+    setSavedSourceCode(sourceCode);
     props.onUpdate(sourceCode);
-    _clear();
+    clear();
 
     const root = ref.current.appendChild(document.createElement('div'));
     try {
       run.current = { root, state: props.notebook.run(sourceCode, root) };
-      _error(null);
+      setError(null);
     } catch (e) {
       root.remove();
-      _error(e);
+      setError(e);
       console.warn(e);
     }
   };
 
-  const _onTextAreaInput = (v) => {
-    return _sourceCode(v);
-  };
-
-  const _onTextAreaKeypress = (event) => {
-    // shift+enter
-    if (event.keyCode === 13 && event.shiftKey) {
+  const onKeyDown = (event) => {
+    if (event.key === 'Enter' && event.shiftKey) {
       event.preventDefault();
-      _onSave();
-    } else if (
-      (event.ctrlKey || event.metaKey) &&
-      (event.key === 's' || event.key === 'S')
-    ) {
-      //ctrl/cmd+s
+      onRun();
+    } else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
+      // Run, then let the event reach the notebook, which saves.
       event.preventDefault();
-      _onSave();
-      props.saveNotebook();
+      onRun();
     }
   };
 
   useEffect(() => {
-    if (ref.current && sourceCode) {
-      _onSave();
-    }
+    if (sourceCode) onRun();
   }, []);
 
   return html`<div
@@ -94,27 +69,21 @@ const IridiumCell = (props) => {
   >
     <div style=${`display: ${error ? 'block' : 'none'}`} class="CellError">
       <div class="observablehq observablehq--error">
-        <div class="observablehq--inspect">${error + ''}</div>
+        <div class="observablehq--inspect">${String(error)}</div>
       </div>
     </div>
     <div
       ref=${ref}
-      class=${`CellResults ${cell_type}`}
-      style=${`display: ${!error ? 'block' : 'none'}`}
+      class=${`CellResults ${cellType(sourceCode)}`}
+      style=${`display: ${error ? 'none' : 'block'}`}
     ></div>
     <div class="CellBefore">
-      <${IridiumIconButton}
-        name="plus-square"
-        label="New"
-        onClick=${props.addBefore}
-      />
+      <${IridiumIconButton} name="plus-square" onClick=${props.addBefore} />
     </div>
     <div class="CellActions" onClick=${props.onPinToggle}>
       <${IridiumIconButton}
         content="Pin"
-        placement="bottom"
         name=${props.pinned ? 'pin-angle-fill' : 'pin-angle'}
-        label="pin"
       />
     </div>
     ${props.pinned
@@ -122,34 +91,27 @@ const IridiumCell = (props) => {
           <${CodeEditor}
             code=${sourceCode}
             index=${props.index}
-            unsaved=${unsaved}
-            onUpdate=${_onTextAreaInput}
-            onKeypress=${_onTextAreaKeypress}
-            set_code=${_setSource}
+            onUpdate=${setSourceCode}
+            onKeyDown=${onKeyDown}
+            onReady=${setEditor}
           />
           <div class="CellEditorActions">
             <${IridiumIconButton}
               content="Delete"
               name="trash2"
-              label="Delete"
-              onClick=${_onDelete}
+              onClick=${onDelete}
             />
             <${IridiumIconButton}
               content="Indent"
               name="text-indent-left"
-              label="Indent"
               style="font-size: 1.25rem;"
-              onClick=${() => {
-                var formatted = beautify(sourceCode, {});
-                setSource && setSource.setter(formatted);
-              }}
+              onClick=${() => editor?.setter(beautify(sourceCode, {}))}
             />
             <${IridiumIconButton}
               content="Run"
               name=${unsaved ? 'play-fill' : 'play'}
-              label="Run"
               style="font-size: 1.25rem;"
-              onClick=${_onSave}
+              onClick=${onRun}
             />
           </div>
         </div>`
