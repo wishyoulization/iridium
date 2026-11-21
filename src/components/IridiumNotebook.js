@@ -1,128 +1,80 @@
 import { html } from 'htm/preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { Runtime } from '@observablehq/runtime';
-import { Interpreter } from '@alex.garcia/unofficial-observablehq-compiler';
+import { createNotebook } from '../notebook.js';
 
 import IridiumIconButton from './IridiumIconButton.js';
 import IridiumCell from './IridiumCell.js';
 
-const iridiumImportResolver = (notebook) => {
-  if (notebook.indexOf('gist.githubusercontent.com') > -1) {
-    return fetch(notebook)
-      .then((res) => res.text())
-      .then((js) => {
-        const blob = new Blob([js], {
-          type: 'text/javascript',
-        });
-        const objectURL = URL.createObjectURL(blob);
-        return objectURL;
-      })
-      .then((u) => import(u))
-      .then((m) => m.default);
-  } else {
-    const origin = `https://api.observablehq.com`;
-    const path = /^@[0-9a-z_-]+\/[0-9a-z_-]+(\/\d+)?([@~]|$)/.test(notebook)
-      ? `${origin}/${notebook}.js?v=3`
-      : /^[0-9a-f]{16}([@~]|$)/.test(notebook)
-      ? `${origin}/d/${notebook}.js?v=3`
-      : notebook;
-
-    return import(path).then((m) => m.default);
-  }
-};
+const emptyCell = (id) => ({ id, pin: true, sourceCode: '' });
 
 const IridiumNotebook = (props) => {
   const ref = useRef(null);
-  const [runtime, _runtime] = useState(new Runtime());
-  const [main, _main] = useState(runtime.module());
-  const [interpreter, _interpreter] = useState(
-    new Interpreter({
-      module: main,
-      resolveImportPath: iridiumImportResolver,
-    }),
-  );
-  const [cells, _cells] = useState(props.cells);
-  const [id, _id] = useState(
-    Math.max.apply(
-      Math,
-      [0, ...props.cells].map((d) => d.id || 0),
-    ) + 1,
-  );
+  const [notebook] = useState(createNotebook);
+  const { main } = notebook;
+  const [cells, setCellsState] = useState(props.cells);
+  // The latest cells, updated synchronously: a cell can update its source and
+  // save in the same event (Cmd+S), before the state update has rendered.
+  const latestCells = useRef(props.cells);
+  const nextId = useRef(Math.max(0, ...props.cells.map((d) => d.id || 0)) + 1);
+  // The keydown listener is registered once; read the current props through this.
+  const latestProps = useRef(props);
+  latestProps.current = props;
 
-  const _onDelete = (r_id) => {
-    _cells(cells.filter((d) => d.id !== r_id));
+  const setCells = (next) => {
+    latestCells.current = next;
+    setCellsState(next);
   };
-  const _onPinToggle = (r_id) => {
-    _cells(
-      cells.map((d) => {
-        if (d.id == r_id) {
-          d.pin = !d.pin;
-        }
-        return d;
-      }),
+  const save = () => latestProps.current.onSave(latestCells.current);
+
+  const onDelete = (id) => {
+    setCells(latestCells.current.filter((d) => d.id !== id));
+  };
+  const onPinToggle = (id) => {
+    setCells(
+      latestCells.current.map((d) => (d.id === id ? { ...d, pin: !d.pin } : d)),
     );
   };
-  const _onNew = () => {
-    _id(id + 1);
-    return _cells([...cells, { id: id + 1, pin: true, sourceCode: '' }]);
+  const onNew = () => {
+    setCells([...latestCells.current, emptyCell(nextId.current++)]);
   };
-  const _onNewBefore = (index) => {
-    _id(id + 1);
-    cells.splice(index, 0, {
-      id: id + 1,
-      pin: true,
-      sourceCode: '',
-    });
-    return _cells(cells);
+  const onNewBefore = (index) => {
+    setCells(latestCells.current.toSpliced(index, 0, emptyCell(nextId.current++)));
   };
-  const _onUpdate = (r_id) => {
-    return (sourceCode) =>
-      _cells(
-        cells.map((cell) =>
-          cell.id === r_id ? Object.assign(cell, { sourceCode }) : cell,
-        ),
-      );
-  };
-  const onKeyPressForSave = (event) => {
-    if (
-      (event.ctrlKey || event.metaKey) &&
-      (event.key === 's' || event.key === 'S')
-    ) {
-      //ctrl/cmd+s
-      props.onSave(cells);
-      event.preventDefault();
-    }
+  const onUpdate = (id) => (sourceCode) => {
+    setCells(
+      latestCells.current.map((d) => (d.id === id ? { ...d, sourceCode } : d)),
+    );
   };
 
   useEffect(() => {
+    // Iridium's width: the notebook's content width, following resizes.
     main.define('width', ['Generators'], (Generators) => {
-      var old_width = null;
+      let previous = null;
       return Generators.observe((change) => {
-        const ro = new ResizeObserver((entries) => {
-          var new_width = 0;
-          for (let entry of entries) {
-            new_width = entry.contentRect.width - 28;
-          }
-          if (new_width != old_width) {
-            change(new_width);
-            old_width = new_width;
-          }
+        const observer = new ResizeObserver((entries) => {
+          const width = entries.at(-1).contentRect.width - 28;
+          if (width !== previous) change((previous = width));
         });
-        ro.observe(ref.current);
-        return () => ro.disconnect();
+        observer.observe(ref.current);
+        return () => observer.disconnect();
       });
     });
 
-    // Store the main to top parent to use it for setting magic variables from outside the notebook
+    // Hand main to the embedding page, e.g. to define variables from outside.
     props.onReady(main);
+
+    const onKeyDown = (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
+        event.preventDefault();
+        save();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, []);
 
   useEffect(() => {
     props._cells(cells);
-    document.addEventListener('keydown', onKeyPressForSave);
-    return () => {
-      document.removeEventListener('keydown', onKeyPressForSave);
-    };
   }, [cells]);
 
   return html`<div class="IridiumNotebook" ref=${ref}>
@@ -131,33 +83,25 @@ const IridiumNotebook = (props) => {
       <${IridiumIconButton}
         content="Save"
         style="float:right;"
-        onClick=${() => props.onSave(cells)}
-        placement="left"
+        onClick=${save}
         name="journal-arrow-up"
       />
     </div>
-    ${cells.map((cell, cell_index) => {
-      return html`<${IridiumCell}
-        key=${cell.id + ''}
-        index=${cell_index + ''}
-        interpreter=${interpreter}
-        onDelete=${() => _onDelete(cell.id)}
-        onPinToggle=${() => _onPinToggle(cell.id)}
-        onUpdate=${_onUpdate(cell.id)}
-        addBefore=${() => _onNewBefore(cell_index)}
+    ${cells.map(
+      (cell, index) => html`<${IridiumCell}
+        key=${cell.id}
+        index=${index}
+        notebook=${notebook}
+        onDelete=${() => onDelete(cell.id)}
+        onPinToggle=${() => onPinToggle(cell.id)}
+        onUpdate=${onUpdate(cell.id)}
+        addBefore=${() => onNewBefore(index)}
         sourceCode=${cell.sourceCode}
-        saveNotebook=${() => props.onSave(cells)}
         pinned=${cell.pin}
-      />`;
-    })}
-    <div className="CellsAfter">
-      <${IridiumIconButton}
-        content="New"
-        placement="right"
-        name="plus-square"
-        label="New"
-        onClick=${() => _onNew()}
-      />
+      />`,
+    )}
+    <div class="CellsAfter">
+      <${IridiumIconButton} content="New" name="plus-square" onClick=${onNew} />
     </div>
   </div>`;
 };

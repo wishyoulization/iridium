@@ -1,123 +1,74 @@
 import { html, render } from 'htm/preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import IridiumNotebook from './components/IridiumNotebook';
+import IridiumNotebook from './components/IridiumNotebook.js';
 
 import './editor.scss';
 import './inspector.scss';
 
+const sources = (cells) => JSON.stringify((cells ?? []).map((d) => d.sourceCode));
 
-const IridiumApp = (props) => {
-  const [current, _current] = useState(props.Ir.get_recent() || null);
-  const [cells, _cells] = useState(null);
-  const [og_cells, _og_cells] = useState(null);
-  const [list, _list] = useState([]);
+const IridiumApp = ({ Ir }) => {
+  const [current, setCurrent] = useState(Ir.get_recent() || null);
+  const [cells, setCells] = useState(null);
+  const [savedCells, setSavedCells] = useState([]);
+  const [list, setList] = useState([]);
 
   useEffect(() => {
-    props.Ir.set_recent(current);
-    props.Ir.load(current).then((loaded) => {
-      if (loaded) {
-        _cells(loaded);
-        _og_cells(JSON.stringify(loaded));
-      } else {
-        _cells([]);
-        _og_cells(JSON.stringify([]));
-      }
+    Ir.set_recent(current);
+    Ir.load(current).then((loaded) => {
+      setCells(loaded ?? []);
+      setSavedCells(loaded ?? []);
     });
   }, [current]);
+
+  const refreshList = () =>
+    Ir.list().then((all) => {
+      if (all.length) setList(all);
+    });
 
   useEffect(() => {
     refreshList();
   }, []);
 
-  const refreshList = () => {
-    props.Ir.list().then((all) => {
-      if (all.length == 0) {
-      } else {
-        _list(all);
-      }
-    });
-  };
+  const onSave = (cells) => Ir.save(current, cells).then(() => setSavedCells(cells));
 
-  const onSave = (cells) => {
-    props.Ir.save(current, cells).then((done) => {
-      _og_cells(JSON.stringify(cells));
-    });
-  };
-
-  const onReady = (main) => {
-    props.Ir.ready(main);
-  };
-
-  const notebook_unchanged =
-    JSON.stringify((cells || []).map((d) => d.sourceCode)) ===
-    JSON.stringify(JSON.parse(og_cells || '[]').map((d) => d.sourceCode));
+  const unchanged = sources(cells) === sources(savedCells);
 
   return html`<div
-    class="IridiumApp ${notebook_unchanged
-      ? 'IridiumNotebookSaved'
-      : 'IridiumNotebookUnsaved'}"
+    class="IridiumApp ${unchanged ? 'IridiumNotebookSaved' : 'IridiumNotebookUnsaved'}"
   >
     ${cells
       ? html`<${IridiumNotebook}
           title=${current}
           cells=${cells}
           onSave=${onSave}
-          onReady=${onReady}
+          onReady=${(main) => Ir.ready(main)}
           doRefresh=${refreshList}
           list=${list}
-          _current=${_current}
-          _cells=${_cells}
+          _current=${setCurrent}
+          _cells=${setCells}
         />`
       : null}
   </div>`;
 };
 
+// The embedding API. Pages may override load/save/list/new/delete/ready, e.g.
+// to store notebooks somewhere other than localStorage.
 window.Iridium = {
-  IridiumApp: IridiumApp,
-  html: html,
-  render: render,
-  useEffect: useEffect,
-  useRef: useRef,
-  useState: useState,
-  save: (name, cells) => {
-    return new Promise((yes, no) => {
-      yes(localStorage.setItem(name + '', JSON.stringify(cells)));
-    });
-  },
-  new: (name) => {
-    return new Promise((yes, no) => {
-      yes(localStorage.setItem(name + '', JSON.stringify([])));
-    });
-  },
-  load: (name) => {
-    return new Promise((yes, no) => {
-      yes(JSON.parse(localStorage.getItem(name + '')));
-    });
-  },
-  list: () => {
-    return new Promise((yes, no) => {
-      yes(Object.keys(localStorage));
-    });
-  },
-  delete: (name) => {
-    localStorage.removeItem(name);
-  },
-  get_recent: () => {
-    return localStorage.getItem('IridiumRecent');
-  },
-  set_recent: (name) => {
-    if (name) {
-      return localStorage.setItem('IridiumRecent', name);
-    } else {
-      return false;
-    }
-  },
+  IridiumApp,
+  html,
+  render,
+  useEffect,
+  useRef,
+  useState,
+  save: async (name, cells) => localStorage.setItem(String(name), JSON.stringify(cells)),
+  new: async (name) => localStorage.setItem(String(name), JSON.stringify([])),
+  load: async (name) => JSON.parse(localStorage.getItem(String(name))),
+  list: async () => Object.keys(localStorage),
+  delete: (name) => localStorage.removeItem(name),
+  get_recent: () => localStorage.getItem('IridiumRecent'),
+  set_recent: (name) => (name ? localStorage.setItem('IridiumRecent', name) : false),
   ready: (main) => {
     window.IridiumMain = main;
   },
 };
-
-// render(
-//   html`<${IridiumApp} Ir=${Iridium} />`,
-//   document.getElementById('iridium-root'),
-// );

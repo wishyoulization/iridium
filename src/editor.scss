@@ -143,12 +143,11 @@
     tab-size: 4;
   }
 
-  .CellResults[class*='viewof'] .observablehq:nth-child(2) {
-    display: none;
-  }
-
-  .CellResults[class*='mutable'] .observablehq:nth-child(1) {
-    display: none;
+  // Notebook Kit's md wraps h2/h3 text in a permalink (<a href="#id">); keep
+  // headings looking like plain headings, as they did before.
+  .CellResults :is(h2, h3) > a[href^='#'] {
+    color: inherit;
+    text-decoration: none;
   }
 }
 
