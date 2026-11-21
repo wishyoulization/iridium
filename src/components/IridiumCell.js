@@ -1,6 +1,6 @@
 import { html } from 'htm/preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { Inspector } from '@observablehq/runtime';
+import { Inspector } from '@observablehq/inspector';
 import CodeEditor from './CodeEditor.js';
 import beautify from 'js-beautify/js/src/javascript';
 import IridiumIconButton from './IridiumIconButton.js';

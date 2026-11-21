@@ -23,7 +23,9 @@ const CodeEditor = (props) => {
           // highlight.js does not trim old tags,
           // let's do it by this hack.
           editor.textContent = editor.textContent;
-          hljs.highlightElement(editor, { language: 'js' });
+          // highlight.js >= 11.8 skips elements it has already highlighted.
+          delete editor.dataset.highlighted;
+          hljs.highlightElement(editor);
         },
         {
           tab: '\t',

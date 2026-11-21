@@ -1,6 +1,7 @@
 import { html } from 'htm/preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { Runtime } from '@observablehq/runtime';
+import { Library } from '@observablehq/stdlib';
 import { Interpreter } from '@alex.garcia/unofficial-observablehq-compiler';
 
 import IridiumIconButton from './IridiumIconButton.js';
@@ -33,7 +34,7 @@ const iridiumImportResolver = (notebook) => {
 
 const IridiumNotebook = (props) => {
   const ref = useRef(null);
-  const [runtime, _runtime] = useState(new Runtime());
+  const [runtime, _runtime] = useState(() => new Runtime(new Library()));
   const [main, _main] = useState(runtime.module());
   const [interpreter, _interpreter] = useState(
     new Interpreter({
