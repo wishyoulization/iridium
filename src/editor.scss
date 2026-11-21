@@ -142,14 +142,6 @@
     line-height: 20px;
     tab-size: 4;
   }
-
-  .CellResults[class*='viewof'] .observablehq:nth-child(2) {
-    display: none;
-  }
-
-  .CellResults[class*='mutable'] .observablehq:nth-child(1) {
-    display: none;
-  }
 }
 
 .IridiumViewOnly {

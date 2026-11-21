@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="data:," />
-    <script src="./iridium.js"></script>
+    <script type="module" src="./iridium.js"></script>
     <style>
       html {
         font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -15,7 +15,8 @@
     <div id="iridium-root-wrapper">
       <div id="iridium-root"></div>
     </div>
-    <script>
+    <!-- type="module": runs after iridium.js (also a module), in document order. -->
+    <script type="module">
       /*
       // Override to catch the notebook main
       Iridium.ready = (main) => {

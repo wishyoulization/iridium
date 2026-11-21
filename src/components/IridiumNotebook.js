@@ -1,47 +1,14 @@
 import { html } from 'htm/preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { Runtime } from '@observablehq/runtime';
-import { Library } from '@observablehq/stdlib';
-import { Interpreter } from '@alex.garcia/unofficial-observablehq-compiler';
+import { createNotebook } from '../notebook.js';
 
 import IridiumIconButton from './IridiumIconButton.js';
 import IridiumCell from './IridiumCell.js';
 
-const iridiumImportResolver = (notebook) => {
-  if (notebook.indexOf('gist.githubusercontent.com') > -1) {
-    return fetch(notebook)
-      .then((res) => res.text())
-      .then((js) => {
-        const blob = new Blob([js], {
-          type: 'text/javascript',
-        });
-        const objectURL = URL.createObjectURL(blob);
-        return objectURL;
-      })
-      .then((u) => import(u))
-      .then((m) => m.default);
-  } else {
-    const origin = `https://api.observablehq.com`;
-    const path = /^@[0-9a-z_-]+\/[0-9a-z_-]+(\/\d+)?([@~]|$)/.test(notebook)
-      ? `${origin}/${notebook}.js?v=3`
-      : /^[0-9a-f]{16}([@~]|$)/.test(notebook)
-      ? `${origin}/d/${notebook}.js?v=3`
-      : notebook;
-
-    return import(path).then((m) => m.default);
-  }
-};
-
 const IridiumNotebook = (props) => {
   const ref = useRef(null);
-  const [runtime, _runtime] = useState(() => new Runtime(new Library()));
-  const [main, _main] = useState(runtime.module());
-  const [interpreter, _interpreter] = useState(
-    new Interpreter({
-      module: main,
-      resolveImportPath: iridiumImportResolver,
-    }),
-  );
+  const [notebook] = useState(createNotebook);
+  const main = notebook.main;
   const [cells, _cells] = useState(props.cells);
   const [id, _id] = useState(
     Math.max.apply(
@@ -141,7 +108,7 @@ const IridiumNotebook = (props) => {
       return html`<${IridiumCell}
         key=${cell.id + ''}
         index=${cell_index + ''}
-        interpreter=${interpreter}
+        notebook=${notebook}
         onDelete=${() => _onDelete(cell.id)}
         onPinToggle=${() => _onPinToggle(cell.id)}
         onUpdate=${_onUpdate(cell.id)}

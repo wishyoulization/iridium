@@ -1,6 +1,5 @@
 import { html } from 'htm/preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { Inspector } from '@observablehq/inspector';
 import CodeEditor from './CodeEditor.js';
 import beautify from 'js-beautify/js/src/javascript';
 import IridiumIconButton from './IridiumIconButton.js';
@@ -27,44 +26,39 @@ const IridiumCell = (props) => {
   const [error, _error] = useState(null);
   const [sourceCode, _sourceCode] = useState(props.sourceCode || '');
   const [savedSourceCode, _savedSourceCode] = useState(null);
-  const [variables, _variables] = useState(null);
+  const run = useRef(null); // { root, state } of the current definition
   const [setSource, _setSource] = useState(null);
   const unsaved = savedSourceCode !== sourceCode;
   const cell_type = get_cell_type(sourceCode);
 
+  // Deletes the cell's variables and detaches their output, so a late update
+  // from a deleted variable cannot draw over the next run.
+  const _clear = () => {
+    if (!run.current) return;
+    props.notebook.dispose(run.current.state);
+    run.current.root.remove();
+    run.current = null;
+  };
+
   const _onDelete = () => {
     props.onDelete();
-    if (variables) variables.map((v) => v.delete());
+    _clear();
   };
 
   const _onSave = () => {
     _savedSourceCode(sourceCode);
     props.onUpdate(sourceCode);
+    _clear();
 
-    if (variables) {
-      for (const v of variables) {
-        v.delete();
-        if (v._observer._node) {
-          v._observer._node.remove();
-        }
-      }
+    const root = ref.current.appendChild(document.createElement('div'));
+    try {
+      run.current = { root, state: props.notebook.run(sourceCode, root) };
+      _error(null);
+    } catch (e) {
+      root.remove();
+      _error(e);
+      console.warn(e);
     }
-
-    const observer = (name) => {
-      const child = ref.current.appendChild(document.createElement('div'));
-      return new Inspector(child);
-    };
-
-    props.interpreter
-      .cell(sourceCode, null, observer)
-      .then((newVars) => {
-        _error(null);
-        _variables(newVars);
-      })
-      .catch((e) => {
-        _error(e);
-        console.warn(e);
-      });
   };
 
   const _onTextAreaInput = (v) => {
