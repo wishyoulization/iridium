@@ -1,6 +1,7 @@
 // Builds dist/feature-tour.json: an Iridium notebook that exercises every
 // feature. Run with `node examples/feature-tour.mjs`, then open dist/demo.html.
 import { writeFileSync } from 'node:fs';
+import { compileCell } from '../src/compile.js';
 
 // [source, pinned]. Pinned cells show their code; unpinned show output only.
 const cells = [
@@ -190,6 +191,12 @@ display(counter.increment());`, true],
   [`oops = (1 +`, true],
 ];
 
-const notebook = cells.map(([sourceCode, pin], i) => ({ id: i + 1, pin, sourceCode }));
+// Ship compiled records too, so the tour opens without loading the compiler.
+const notebook = cells.map(([sourceCode, pin], i) => ({
+  id: i + 1,
+  pin,
+  sourceCode,
+  compiled: compileCell(sourceCode),
+}));
 writeFileSync(new URL('../dist/feature-tour.json', import.meta.url), JSON.stringify(notebook, null, 2) + '\n');
 console.log(`wrote dist/feature-tour.json (${notebook.length} cells)`);

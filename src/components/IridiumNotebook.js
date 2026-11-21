@@ -45,6 +45,13 @@ const IridiumNotebook = (props) => {
       latestCells.current.map((d) => (d.id === id ? { ...d, sourceCode } : d)),
     );
   };
+  // Keeps the cell's compiled record with it, so the next save stores it and
+  // the notebook can later run without loading the compiler.
+  const onCompiled = (id) => (compiled) => {
+    setCells(
+      latestCells.current.map((d) => (d.id === id ? { ...d, compiled } : d)),
+    );
+  };
 
   useEffect(() => {
     // Iridium's width: the notebook's content width, following resizes.
@@ -95,6 +102,8 @@ const IridiumNotebook = (props) => {
         onDelete=${() => onDelete(cell.id)}
         onPinToggle=${() => onPinToggle(cell.id)}
         onUpdate=${onUpdate(cell.id)}
+        compiled=${cell.compiled}
+        onCompiled=${onCompiled(cell.id)}
         addBefore=${() => onNewBefore(index)}
         sourceCode=${cell.sourceCode}
         pinned=${cell.pin}

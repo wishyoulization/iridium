@@ -2,15 +2,15 @@ import { html } from 'htm/preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { CodeJar } from 'codejar';
 
-import hljs from 'highlight.js/lib/core';
-import javascript from 'highlight.js/lib/languages/javascript';
-import xml from 'highlight.js/lib/languages/xml';
-import css from 'highlight.js/lib/languages/css';
-hljs.registerLanguage('javascript', javascript);
-hljs.registerLanguage('xml', xml);
-hljs.registerLanguage('css', css);
+// highlight.js loads on demand, when the first editor becomes visible, so
+// notebooks shown without editors (view-only embeds) never download it.
+let hljs = null;
+let loading = null;
+const loadHighlighter = () =>
+  (loading ??= import('../highlighter.js').then((module) => (hljs = module.default)));
 
 const highlight = (editor) => {
+  if (!hljs) return; // plain text until highlight.js has loaded
   // highlight.js does not strip its previous markup, so reset to plain text.
   editor.textContent = editor.textContent;
   // highlight.js >= 11.8 skips elements it has already highlighted.
@@ -23,7 +23,8 @@ const CodeEditor = (props) => {
   const [code, setCode] = useState(props.code);
 
   useEffect(() => {
-    const jar = CodeJar(ref.current, highlight, {
+    const element = ref.current;
+    const jar = CodeJar(element, highlight, {
       tab: '\t',
       indentOn: /[(\[]$/,
       addClosing: false,
@@ -40,7 +41,23 @@ const CodeEditor = (props) => {
       },
     });
 
-    return () => jar.destroy();
+    // Highlight once the editor is on screen, keeping the caret in place.
+    const visibility = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      visibility.disconnect();
+      loadHighlighter().then(() => {
+        if (!element.isConnected) return;
+        const caret = element.contains(document.activeElement) ? jar.save() : null;
+        highlight(element);
+        if (caret) jar.restore(caret);
+      });
+    });
+    visibility.observe(element);
+
+    return () => {
+      visibility.disconnect();
+      jar.destroy();
+    };
   }, []);
 
   useEffect(() => {
