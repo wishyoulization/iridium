@@ -110,3 +110,19 @@ Differences from the previous build:
 Plain JavaScript cells: several statements, top-level `const`/`let`/`function`/`class` declarations exported to other cells, default/namespace/`npm:` imports, `display(…)` (several calls append outputs; a re-run replaces them). A cell that only declares values shows no output, as in Notebooks 2.0. `https://` named imports such as gists stay Observable notebook imports, as before.
 
 Also: Kit's `md` turns `h2`/`h3` into permalinks; `editor.scss` keeps them looking like plain headings.
+
+## Startup size: lazy compiler, highlighting and formatter
+
+The startup bundle (`dist/iridium.js`) is 95 KB raw / 31 KB gzip / 28 KB brotli, down from 365 / 109 / 92 KB. Three parts load on demand instead:
+
+| Chunk | gzip | Loaded when |
+| --- | --- | --- |
+| `compile` (Kit `transpile`, `@observablehq/parser`, acorn) | ~47 KB | a cell has no current compiled record (new/edited cell, older notebook) |
+| `highlighter` (highlight.js + JS/HTML/CSS grammars) | ~15 KB | an editor scrolls into view (never in view-only embeds); also used by the compiler for import lines |
+| js-beautify | ~9 KB | the Indent button is first clicked |
+
+**Compiled records** (`src/compiled.js`): `compileCell()` (`src/compile.js`) returns `{ v, hash, body, inputs, outputs, output, autodisplay, autoview, automutable, summary }` or `{ v, hash, error }`. `hash` is an FNV-1a hash of the source and `v` the record format; the runtime (`notebook.compile`) reuses a record only while both match, otherwise it loads the compiler. Cells pass new records up (`onCompiled`), so the next save stores them as `compiled` beside `sourceCode`. Compiled records don't mark a notebook unsaved. Bump `FORMAT` when compiler output or the record shape changes.
+
+Stored notebooks grow (the feature tour: ~7 KB of source, ~32 KB with records). `examples/feature-tour.mjs` precompiles the tour, so `demo.html` opens without the compiler.
+
+Chunk file names never start with `_`: GitHub Pages' Jekyll build skips such files.

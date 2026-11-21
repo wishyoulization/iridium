@@ -62,7 +62,9 @@ export default {
     // them would turn their esm.sh imports into network requests at startup.
     format: 'es',
     entryFileNames: 'iridium.js',
-    chunkFileNames: 'chunks/[name]-[hash].js',
+    // No leading underscores (e.g. _commonjsHelpers): GitHub Pages' Jekyll
+    // build skips such files, so they would 404 there.
+    chunkFileNames: ({ name }) => `chunks/${name.replace(/^_+/, '')}-[hash].js`,
   },
   onwarn(warning, warn) {
     // Circular imports inside Observable's packages are harmless.

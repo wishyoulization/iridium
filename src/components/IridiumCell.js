@@ -1,6 +1,5 @@
 import { html } from 'htm/preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import beautify from 'js-beautify/js/src/javascript';
 import CodeEditor from './CodeEditor.js';
 import IridiumIconButton from './IridiumIconButton.js';
 
@@ -27,24 +26,50 @@ const IridiumCell = (props) => {
   };
 
   const onDelete = () => {
+    runToken.current++; // drop any compile still in flight
     props.onDelete();
     clear();
   };
 
-  const onRun = () => {
-    setSavedSourceCode(sourceCode);
-    props.onUpdate(sourceCode);
+  const runToken = useRef(0);
+  const onRun = async () => {
+    const source = sourceCode;
+    setSavedSourceCode(source);
+    props.onUpdate(source);
     clear();
+
+    // Compiling is instant when the cell's saved record is current; otherwise
+    // it loads the compiler first. Ignore results a newer run has overtaken.
+    const token = ++runToken.current;
+    let record;
+    try {
+      record = await props.notebook.compile(source, props.compiled);
+    } catch (e) {
+      record = { error: String(e) }; // e.g. the compiler failed to load
+    }
+    if (token !== runToken.current) return;
+    if (record.v && record !== props.compiled) props.onCompiled(record);
+    if (record.error) {
+      setError(record.error);
+      console.warn(record.error);
+      return;
+    }
 
     const root = ref.current.appendChild(document.createElement('div'));
     try {
-      run.current = { root, state: props.notebook.run(sourceCode, root) };
+      run.current = { root, state: props.notebook.define(record, root) };
       setError(null);
     } catch (e) {
       root.remove();
       setError(e);
       console.warn(e);
     }
+  };
+
+  // js-beautify is only needed for the Indent button; load it on first use.
+  const formatCode = async () => {
+    const { default: beautify } = await import('js-beautify/js/src/javascript');
+    editor?.setter(beautify(sourceCode, {}));
   };
 
   const onKeyDown = (event) => {
@@ -105,7 +130,7 @@ const IridiumCell = (props) => {
               content="Indent"
               name="text-indent-left"
               style="font-size: 1.25rem;"
-              onClick=${() => editor?.setter(beautify(sourceCode, {}))}
+              onClick=${formatCode}
             />
             <${IridiumIconButton}
               content="Run"

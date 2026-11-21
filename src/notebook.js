@@ -1,43 +1,13 @@
-// Iridium's notebook backend: Observable Notebook Kit compiles and runs cells.
-import { transpile } from '@observablehq/notebook-kit';
+// Iridium's notebook backend: Observable Notebook Kit's runtime runs cells.
+// Compiling is separate (src/compile.js, loaded on demand) so notebooks whose
+// cells carry a current compiled record never download the compiler.
 import { NotebookRuntime, library } from '@observablehq/notebook-kit/runtime';
 import { Inspector } from '@observablehq/inspector';
 import { require as classicRequire } from 'd3-require';
-import { parseCell } from '@observablehq/parser';
-import hljs from 'highlight.js/lib/core';
-import javascript from 'highlight.js/lib/languages/javascript';
-hljs.registerLanguage('javascript', javascript);
+import { isCurrent } from './compiled.js';
 
-// Import cells display nothing in Notebook Kit. Iridium has always shown the
-// resolved import as a highlighted line, e.g.
-//   import {Legend as Legend} from "@d3/color-legend"
-// so render the same text and markup the previous compiler produced.
-const importSummary = (source) => {
-  if (!/^\s*import\b/.test(source)) return null;
-  let body;
-  try {
-    body = parseCell(source).body;
-  } catch {
-    return null;
-  }
-  if (body?.type !== 'ImportDeclaration') return null;
-  const names = (specifiers = []) =>
-    specifiers.flatMap(({ imported, local, view, mutable }) => [
-      ...(view ? [`viewof ${imported.name} as viewof ${local.name}`] : []),
-      ...(mutable ? [`mutable ${imported.name} as mutable ${local.name}`] : []),
-      `${imported.name} as ${local.name}`,
-    ]);
-  const injections = body.injections
-    ? `with {${names(body.injections).join(', ')}} `
-    : '';
-  const text = `import {${names(body.specifiers).join(', ')}} ${injections}from "${body.source.value}"`;
-  const node = document.createElement('div');
-  node.className = 'observablehq';
-  node.innerHTML = `<pre class="observablehq--md-pre"><code class="javascript hljs">  ${
-    hljs.highlight(text, { language: 'javascript' }).value
-  }\n</code></pre>`;
-  return node;
-};
+let compiler = null;
+const loadCompiler = () => (compiler ??= import('./compile.js'));
 
 // Gists are served as text/plain, which browsers refuse to import() directly,
 // so fetch the source and import it from a blob URL instead.
@@ -77,34 +47,6 @@ const observe = (state, { autodisplay, output }) => {
   };
 };
 
-// Cells are classic Observable JavaScript (`x = …`, `viewof`, `mutable`,
-// `import {x} from "@user/notebook"`) unless they only make sense as plain
-// JavaScript: several statements, `const`/`let` declarations, default or
-// namespace imports, `display(…)`. Try Observable JavaScript first so existing
-// notebooks behave exactly as before, and fall back to plain JavaScript.
-// `import {x} from "npm:…"` parses as both, but only works as plain JavaScript
-// (as Observable JavaScript it would be treated as a notebook import).
-const PACKAGE_IMPORT = /\bfrom\s*(["'])(npm|jsr):/;
-const compile = (source, id) => {
-  const as = (mode) => transpile({ id, value: source, mode });
-  if (PACKAGE_IMPORT.test(source)) {
-    try {
-      return as('js');
-    } catch {
-      // not valid plain JavaScript either; report the Observable error below
-    }
-  }
-  try {
-    return as('ojs');
-  } catch (error) {
-    try {
-      return as('js');
-    } catch {
-      throw error; // the Observable JavaScript error is the familiar one
-    }
-  }
-};
-
 // Every definition needs an id that is unique within the runtime; Kit uses it
 // to name a cell's internal variables. Re-runs get a new id too.
 let nextDefinitionId = 0;
@@ -120,36 +62,42 @@ export function createNotebook() {
     _: () => import('https://esm.sh/lodash-es').then((module) => module.default),
   });
 
-  // Compiles a cell (see compile) and defines it, rendering into root.
-  // Throws (e.g. SyntaxError) without defining anything if it does not compile.
-  const run = (source, root) => {
+  // Resolves to the compiled record for source: the given record if it is
+  // still current, otherwise a fresh one from the compiler (loaded on demand).
+  const compile = async (source, record) =>
+    isCurrent(record, source) ? record : (await loadCompiler()).compileCell(source);
+
+  // Defines a compiled record (without an error), rendering into root.
+  const define = (record, root) => {
     const id = ++nextDefinitionId;
-    const transpiled = compile(source, id);
     const body = new Function(
       '__importGist',
-      `return (${transpiled.body.replace(GIST_IMPORT, '__importGist($1)')});`,
+      `return (${record.body.replace(GIST_IMPORT, '__importGist($1)')});`,
     )(importGist);
+    if (record.summary) {
+      const summary = root.appendChild(document.createElement('div'));
+      summary.className = 'observablehq';
+      summary.innerHTML = `<pre class="observablehq--md-pre"><code class="javascript hljs">  ${record.summary}\n</code></pre>`;
+    }
     // Kit clears state.root whenever the cell settles, so give it its own
-    // container and keep Iridium's extra import line next to it.
-    const summary = importSummary(source);
-    if (summary) root.appendChild(summary);
+    // container, next to Iridium's import line.
     const state = {
       root: root.appendChild(document.createElement('div')),
       expanded: [],
       variables: [],
     };
-    notebook.define(state, { ...transpiled, id, body }, observe);
+    notebook.define(state, { ...record, id, body }, observe);
     return state;
   };
 
   // Removes a cell's variables. Their observers may still fire once with
-  // undefined, so callers should detach the root they passed to run() rather
-  // than reuse it.
+  // undefined, so callers should detach the root they passed to define()
+  // rather than reuse it.
   const dispose = (state) => {
     if (!state) return;
     for (const v of state.variables) v.delete();
     state.variables.length = 0;
   };
 
-  return { main: notebook.main, run, dispose };
+  return { main: notebook.main, compile, define, dispose };
 }
