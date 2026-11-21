@@ -1,0 +1,1 @@
+import e from"https://esm.sh/mapbox-gl";export{default}from"https://esm.sh/mapbox-gl";const t=document.createElement("link");t.href="https://esm.sh/mapbox-gl/dist/mapbox-gl.css",t.rel="stylesheet",document.head.appendChild(t);

@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="data:," />
     <script src="https://cdn.jsdelivr.net/gh/tableau/extensions-api/lib/tableau.extensions.1.latest.js"></script>
-    <script src="./iridium.js"></script>
+    <script type="module" src="./iridium.js"></script>
   </head>
   <body class="" data-hint-view-only="IridiumViewOnly">
     <div id="iridium-root-wrapper">
       <div id="iridium-root"></div>
     </div>
-    <script>
+    <!-- type="module": runs after iridium.js (also a module), in document order. -->
+    <script type="module">
       tableau.extensions
         .initializeAsync({
           configure: () => {

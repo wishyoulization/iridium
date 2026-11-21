@@ -9,8 +9,9 @@
     <div id="iridium-root-wrapper">
       <div id="iridium-root"></div>
     </div>
-    <script src="./iridium.js"></script>
-    <script>
+    <script type="module" src="./iridium.js"></script>
+    <!-- type="module": runs after iridium.js (also a module), in document order. -->
+    <script type="module">
       // Iridium.ready = (main) => {
       //   console.log(main);
       //   main.define('variable', 257);

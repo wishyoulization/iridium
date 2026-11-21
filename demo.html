@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Iridium feature tour</title>
+    <link rel="icon" href="data:," />
+  </head>
+  <body>
+    <p>Loading the feature tour…</p>
+    <script type="module">
+      // Seeds the "feature-tour" notebook into this browser's storage (unless
+      // you already have it; add ?reset to start over), then opens Iridium.
+      const name = 'feature-tour';
+      const reset = new URLSearchParams(location.search).has('reset');
+      if (reset || !localStorage.getItem(name)) {
+        const cells = await fetch('./feature-tour.json', { cache: 'no-store' }).then((r) => r.json());
+        localStorage.setItem(name, JSON.stringify(cells));
+      }
+      localStorage.setItem('IridiumRecent', name);
+      location.replace('./index.html');
+    </script>
+  </body>
+</html>
