@@ -1,0 +1,332 @@
+[
+  {
+    "id": 1,
+    "pin": false,
+    "sourceCode": "md`# Iridium feature tour\n\nEvery cell below is compiled and run by Observable's Notebook Kit. Edit any cell and press **Shift+Enter** (or ▶) to re-run it; cells that depend on it update automatically. **⌘S** saves. The pin icon on the left shows or hides a cell's code.`"
+  },
+  {
+    "id": 2,
+    "pin": false,
+    "sourceCode": "md`## Values and reactivity`"
+  },
+  {
+    "id": 3,
+    "pin": true,
+    "sourceCode": "price = 12.5"
+  },
+  {
+    "id": 4,
+    "pin": true,
+    "sourceCode": "quantity = 4"
+  },
+  {
+    "id": 5,
+    "pin": true,
+    "sourceCode": "total = price * quantity"
+  },
+  {
+    "id": 6,
+    "pin": true,
+    "sourceCode": "md`Total: **$${total.toFixed(2)}** — change \\`price\\` or \\`quantity\\` above and re-run.`"
+  },
+  {
+    "id": 7,
+    "pin": false,
+    "sourceCode": "md`## Inspecting values`"
+  },
+  {
+    "id": 8,
+    "pin": true,
+    "sourceCode": "sample = ({\n  name: \"Iridium\",\n  tags: [\"notebook\", \"observable\"],\n  nested: { depth: 2, ok: true },\n  created: new Date(2024, 0, 1),\n  lookup: new Map([[\"a\", 1], [\"b\", 2]]),\n  unique: new Set([1, 2, 3])\n})"
+  },
+  {
+    "id": 9,
+    "pin": true,
+    "sourceCode": "function greet(who) {\n  return `Hello, ${who}!`;\n}"
+  },
+  {
+    "id": 10,
+    "pin": true,
+    "sourceCode": "greet(\"world\")"
+  },
+  {
+    "id": 11,
+    "pin": true,
+    "sourceCode": "squares = Array.from({ length: 500 }, (_, i) => i * i)"
+  },
+  {
+    "id": 12,
+    "pin": false,
+    "sourceCode": "md`## Inputs and viewof`"
+  },
+  {
+    "id": 13,
+    "pin": true,
+    "sourceCode": "viewof radius = Inputs.range([5, 60], { value: 25, step: 1, label: \"Radius\" })"
+  },
+  {
+    "id": 14,
+    "pin": true,
+    "sourceCode": "viewof color = Inputs.select([\"steelblue\", \"tomato\", \"seagreen\", \"goldenrod\"], { label: \"Color\" })"
+  },
+  {
+    "id": 15,
+    "pin": true,
+    "sourceCode": "viewof name = Inputs.text({ label: \"Name\", value: \"Observable\" })"
+  },
+  {
+    "id": 16,
+    "pin": true,
+    "sourceCode": "viewof shapes = Inputs.checkbox([\"circle\", \"square\"], { label: \"Shapes\", value: [\"circle\", \"square\"] })"
+  },
+  {
+    "id": 17,
+    "pin": true,
+    "sourceCode": "svg`<svg width=${radius * 4 + 30} height=${radius * 2 + 20}>\n  ${shapes.includes(\"circle\") ? svg`<circle cx=${radius + 10} cy=${radius + 10} r=${radius} fill=${color}></circle>` : \"\"}\n  ${shapes.includes(\"square\") ? svg`<rect x=${radius * 2 + 20} y=10 width=${radius * 2} height=${radius * 2} fill=${color}></rect>` : \"\"}\n</svg>`"
+  },
+  {
+    "id": 18,
+    "pin": true,
+    "sourceCode": "html`<p style=\"font-size: 1.4em\">Hi <b style=\"color: ${color}\">${name}</b>, the radius is ${radius}.</p>`"
+  },
+  {
+    "id": 19,
+    "pin": false,
+    "sourceCode": "md`## mutable and buttons`"
+  },
+  {
+    "id": 20,
+    "pin": true,
+    "sourceCode": "mutable clicks = 0"
+  },
+  {
+    "id": 21,
+    "pin": true,
+    "sourceCode": "viewof bump = Inputs.button(\"Increment clicks\", { reduce: () => { mutable clicks++; } })"
+  },
+  {
+    "id": 22,
+    "pin": true,
+    "sourceCode": "viewof count = Inputs.button(\"Count\", { value: 0, reduce: (n) => n + 1 })"
+  },
+  {
+    "id": 23,
+    "pin": true,
+    "sourceCode": "md`\\`clicks\\` (mutable) is **${clicks}**; the Count button's own value is **${count}**.`"
+  },
+  {
+    "id": 24,
+    "pin": false,
+    "sourceCode": "md`## Generators, time and animation`"
+  },
+  {
+    "id": 25,
+    "pin": true,
+    "sourceCode": "clock = {\n  while (true) {\n    yield new Date().toLocaleTimeString();\n    await new Promise((resolve) => setTimeout(resolve, 1000));\n  }\n}"
+  },
+  {
+    "id": 26,
+    "pin": true,
+    "sourceCode": "start = Date.now()"
+  },
+  {
+    "id": 27,
+    "pin": true,
+    "sourceCode": "md`This notebook has been open for **${Math.floor((now - start) / 1000)}** seconds.`"
+  },
+  {
+    "id": 28,
+    "pin": true,
+    "sourceCode": "{\n  const height = 120;\n  const context = DOM.context2d(width, height);\n  while (true) {\n    const t = performance.now() / 1000;\n    context.clearRect(0, 0, width, height);\n    context.fillStyle = color;\n    for (let i = 0; i < 40; ++i) {\n      context.beginPath();\n      context.arc((i / 39) * (width - 20) + 10, height / 2 + Math.sin(t * 2 + i / 3) * 40, radius / 6, 0, 2 * Math.PI);\n      context.fill();\n    }\n    yield context.canvas;\n  }\n}"
+  },
+  {
+    "id": 29,
+    "pin": true,
+    "sourceCode": "md`The notebook is **${width}px** wide — resize the window and the animation above follows.`"
+  },
+  {
+    "id": 30,
+    "pin": false,
+    "sourceCode": "md`## Data and charts`"
+  },
+  {
+    "id": 31,
+    "pin": true,
+    "sourceCode": "viewof selected = Inputs.table(penguins, { rows: 8 })"
+  },
+  {
+    "id": 32,
+    "pin": true,
+    "sourceCode": "md`${selected.length} of ${penguins.length} penguins selected (tick rows in the table).`"
+  },
+  {
+    "id": 33,
+    "pin": true,
+    "sourceCode": "Plot.plot({\n  width,\n  grid: true,\n  color: { legend: true },\n  marks: [\n    Plot.dot(selected.length ? selected : penguins, {\n      x: \"flipper_length_mm\",\n      y: \"body_mass_g\",\n      stroke: \"species\",\n      r: radius / 8\n    })\n  ]\n})"
+  },
+  {
+    "id": 34,
+    "pin": true,
+    "sourceCode": "{\n  const height = 160;\n  const data = d3.range(60).map((i) => Math.sin(i / 4) * Math.cos(i / 11));\n  const x = d3.scaleLinear([0, data.length - 1], [30, width - 10]);\n  const y = d3.scaleLinear(d3.extent(data), [height - 20, 10]);\n  const svg = d3.create(\"svg\").attr(\"width\", width).attr(\"height\", height);\n  svg.append(\"path\")\n      .attr(\"fill\", \"none\")\n      .attr(\"stroke\", color)\n      .attr(\"stroke-width\", 2)\n      .attr(\"d\", d3.line((d, i) => x(i), y)(data));\n  svg.append(\"g\")\n      .attr(\"transform\", `translate(0,${height - 20})`)\n      .call(d3.axisBottom(x));\n  return svg.node();\n}"
+  },
+  {
+    "id": 35,
+    "pin": false,
+    "sourceCode": "md`## Libraries and markup`"
+  },
+  {
+    "id": 36,
+    "pin": true,
+    "sourceCode": "_.chunk([\"a\", \"b\", \"c\", \"d\", \"e\"], 2)"
+  },
+  {
+    "id": 37,
+    "pin": true,
+    "sourceCode": "dayjs = import(\"dayjs\").then((module) => module.default)"
+  },
+  {
+    "id": 38,
+    "pin": true,
+    "sourceCode": "dayjs().add(1, \"week\").format(\"dddd, MMMM D\")"
+  },
+  {
+    "id": 39,
+    "pin": true,
+    "sourceCode": "d3array = require(\"d3-array@3\")"
+  },
+  {
+    "id": 40,
+    "pin": true,
+    "sourceCode": "d3array.median([3, 1, 4, 1, 5, 9, 2, 6])"
+  },
+  {
+    "id": 41,
+    "pin": true,
+    "sourceCode": "tex`E = mc^2 \\qquad \\int_0^1 x^2\\,dx = \\tfrac{1}{3}`"
+  },
+  {
+    "id": 42,
+    "pin": true,
+    "sourceCode": "dot`digraph { rankdir=LR; node [shape=box]; Cell -> transpile -> define -> Inspector }`"
+  },
+  {
+    "id": 43,
+    "pin": true,
+    "sourceCode": "mermaid`graph LR\n  A[Edit cell] --> B[Shift+Enter]\n  B --> C[Notebook Kit]\n  C --> D[Dependents update]`"
+  },
+  {
+    "id": 44,
+    "pin": false,
+    "sourceCode": "md`## Importing from Observable\n\nThese cells import live code from notebooks on [observablehq.com](https://observablehq.com).`"
+  },
+  {
+    "id": 45,
+    "pin": true,
+    "sourceCode": "import {Legend, Swatches} from \"@d3/color-legend\""
+  },
+  {
+    "id": 46,
+    "pin": true,
+    "sourceCode": "Legend(d3.scaleSequential([0, 100], d3.interpolateViridis), { title: \"Temperature (°F)\" })"
+  },
+  {
+    "id": 47,
+    "pin": true,
+    "sourceCode": "Swatches(d3.scaleOrdinal([\"blueberries\", \"oranges\", \"apples\"], d3.schemeCategory10))"
+  },
+  {
+    "id": 48,
+    "pin": true,
+    "sourceCode": "import {chart as alphabetChart} from \"@d3/bar-chart/2\""
+  },
+  {
+    "id": 49,
+    "pin": true,
+    "sourceCode": "alphabetChart"
+  },
+  {
+    "id": 50,
+    "pin": true,
+    "sourceCode": "nameLetters = Array.from(\n  d3.rollup(name.toUpperCase().replace(/[^A-Z]/g, \"\"), (v) => v.length, (d) => d),\n  ([letter, count]) => ({ letter, frequency: count })\n)"
+  },
+  {
+    "id": 51,
+    "pin": true,
+    "sourceCode": "import {chart as nameChart} with {nameLetters as data} from \"@d3/bar-chart/2\""
+  },
+  {
+    "id": 52,
+    "pin": false,
+    "sourceCode": "md`The same bar chart, with its \\`data\\` swapped for the letters in **${name}** (edit the Name input above):`"
+  },
+  {
+    "id": 53,
+    "pin": true,
+    "sourceCode": "nameChart"
+  },
+  {
+    "id": 54,
+    "pin": true,
+    "sourceCode": "import {Scrubber} from \"@mbostock/scrubber\""
+  },
+  {
+    "id": 55,
+    "pin": true,
+    "sourceCode": "viewof frame = Scrubber(d3.range(0, 101), { autoplay: false, loop: true, delay: 40 })"
+  },
+  {
+    "id": 56,
+    "pin": true,
+    "sourceCode": "html`<div style=\"height: 14px; width: ${frame}%; background: ${color}; border-radius: 3px\"></div>`"
+  },
+  {
+    "id": 57,
+    "pin": true,
+    "sourceCode": "import {slider} from \"@jashkenas/inputs\""
+  },
+  {
+    "id": 58,
+    "pin": true,
+    "sourceCode": "viewof legacy = slider({ min: 0, max: 10, step: 0.5, value: 3, title: \"A classic slider from @jashkenas/inputs\" })"
+  },
+  {
+    "id": 59,
+    "pin": true,
+    "sourceCode": "legacy * 2"
+  },
+  {
+    "id": 60,
+    "pin": true,
+    "sourceCode": "import {chart as forceGraph} from \"@d3/force-directed-graph/2\""
+  },
+  {
+    "id": 61,
+    "pin": true,
+    "sourceCode": "forceGraph"
+  },
+  {
+    "id": 62,
+    "pin": false,
+    "sourceCode": "md`## Async values and errors`"
+  },
+  {
+    "id": 63,
+    "pin": true,
+    "sourceCode": "slow = new Promise((resolve) => setTimeout(() => resolve(\"Resolved after 2 seconds\"), 2000))"
+  },
+  {
+    "id": 64,
+    "pin": true,
+    "sourceCode": "brokenReference = notDefinedAnywhere + 1"
+  },
+  {
+    "id": 65,
+    "pin": true,
+    "sourceCode": "{\n  throw new Error(\"Thrown on purpose\");\n}"
+  },
+  {
+    "id": 66,
+    "pin": true,
+    "sourceCode": "oops = (1 +"
+  }
+]

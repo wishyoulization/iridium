@@ -81,6 +81,9 @@ export function createNotebook() {
   const notebook = new NotebookRuntime({
     ...library,
     require: () => classicRequire,
+    // Kit's _ is esm.sh/lodash's default export, which esm.sh currently
+    // serves as an empty object (_.chunk etc. are undefined). lodash-es works.
+    _: () => import('https://esm.sh/lodash-es').then((module) => module.default),
   });
 
   // Compiles Observable JavaScript and defines it, rendering into root.
