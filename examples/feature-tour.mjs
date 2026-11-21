@@ -150,6 +150,36 @@ These cells import live code from notebooks on [observablehq.com](https://observ
   [`import {chart as forceGraph} from "@d3/force-directed-graph/2"`, true],
   [`forceGraph`, true],
 
+  // Plain JavaScript cells
+  [`md\`## Plain JavaScript cells
+
+Cells that aren't valid Observable JavaScript run as plain JavaScript, like Observable Notebooks 2.0: several statements, \\\`const\\\` declarations, standard imports, and \\\`display(…)\\\` to show output. Top-level declarations are available to other cells.\``, false],
+  [`import {sum, mean} from "npm:d3-array";
+
+const scores = [72, 88, 95, 61, 84];
+const average = mean(scores);
+
+display(\`Total \${sum(scores)}, average \${average.toFixed(1)}\`);`, true],
+  [`md\`Other cells can use them: the best score is **\${Math.max(...scores)}** and the average is **\${average}**.\``, true],
+  [`import confetti from "https://esm.sh/canvas-confetti@1";
+
+const button = html\`<button>Celebrate 🎉</button>\`;
+button.onclick = () => confetti({ particleCount: 120, spread: 70 });
+display(button);`, true],
+  [`const label = \`\${name} picked \${color}\`;
+
+for (const size of [12, 18, 24]) {
+  display(html\`<span style="font-size: \${size}px; color: \${color}; margin-right: 8px">\${label}</span>\`);
+}`, true],
+  [`class Counter {
+  #count = 0;
+  increment() { return ++this.#count; }
+}
+
+const counter = new Counter();
+counter.increment();
+display(counter.increment());`, true],
+
   // Async and errors
   [`md\`## Async values and errors\``, false],
   [`slow = new Promise((resolve) => setTimeout(() => resolve("Resolved after 2 seconds"), 2000))`, true],

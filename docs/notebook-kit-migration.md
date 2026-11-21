@@ -98,3 +98,15 @@ Differences from the previous build:
 - `md` output is wrapped in one extra `<div>` (same size and styling), and `h1` headings no longer get an `id` anchor (Kit anchors `h2`/`h3`).
 - Notebook imports use api.observablehq.com `?v=4` modules (was `?v=3`).
 - `dist/` is now `iridium.js` + `chunks/`, loaded with `<script type="module">`.
+
+## Plain JavaScript cells (auto-detected)
+
+`compile()` in `src/notebook.js` picks the cell mode with no UI change:
+
+1. Source with `from "npm:…"` / `from "jsr:…"` → plain JavaScript (`js`) if it compiles. These imports parse as Observable JavaScript too, but there they would be treated as notebook imports and fail.
+2. Otherwise Observable JavaScript (`ojs`) first, so every existing notebook behaves exactly as before.
+3. If that fails, plain JavaScript; if that fails too, the Observable JavaScript error is shown.
+
+Plain JavaScript cells: several statements, top-level `const`/`let`/`function`/`class` declarations exported to other cells, default/namespace/`npm:` imports, `display(…)` (several calls append outputs; a re-run replaces them). A cell that only declares values shows no output, as in Notebooks 2.0. `https://` named imports such as gists stay Observable notebook imports, as before.
+
+Also: Kit's `md` turns `h2`/`h3` into permalinks; `editor.scss` keeps them looking like plain headings.

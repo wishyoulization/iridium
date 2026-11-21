@@ -307,25 +307,55 @@
   {
     "id": 62,
     "pin": false,
-    "sourceCode": "md`## Async values and errors`"
+    "sourceCode": "md`## Plain JavaScript cells\n\nCells that aren't valid Observable JavaScript run as plain JavaScript, like Observable Notebooks 2.0: several statements, \\`const\\` declarations, standard imports, and \\`display(…)\\` to show output. Top-level declarations are available to other cells.`"
   },
   {
     "id": 63,
     "pin": true,
-    "sourceCode": "slow = new Promise((resolve) => setTimeout(() => resolve(\"Resolved after 2 seconds\"), 2000))"
+    "sourceCode": "import {sum, mean} from \"npm:d3-array\";\n\nconst scores = [72, 88, 95, 61, 84];\nconst average = mean(scores);\n\ndisplay(`Total ${sum(scores)}, average ${average.toFixed(1)}`);"
   },
   {
     "id": 64,
     "pin": true,
-    "sourceCode": "brokenReference = notDefinedAnywhere + 1"
+    "sourceCode": "md`Other cells can use them: the best score is **${Math.max(...scores)}** and the average is **${average}**.`"
   },
   {
     "id": 65,
     "pin": true,
-    "sourceCode": "{\n  throw new Error(\"Thrown on purpose\");\n}"
+    "sourceCode": "import confetti from \"https://esm.sh/canvas-confetti@1\";\n\nconst button = html`<button>Celebrate 🎉</button>`;\nbutton.onclick = () => confetti({ particleCount: 120, spread: 70 });\ndisplay(button);"
   },
   {
     "id": 66,
+    "pin": true,
+    "sourceCode": "const label = `${name} picked ${color}`;\n\nfor (const size of [12, 18, 24]) {\n  display(html`<span style=\"font-size: ${size}px; color: ${color}; margin-right: 8px\">${label}</span>`);\n}"
+  },
+  {
+    "id": 67,
+    "pin": true,
+    "sourceCode": "class Counter {\n  #count = 0;\n  increment() { return ++this.#count; }\n}\n\nconst counter = new Counter();\ncounter.increment();\ndisplay(counter.increment());"
+  },
+  {
+    "id": 68,
+    "pin": false,
+    "sourceCode": "md`## Async values and errors`"
+  },
+  {
+    "id": 69,
+    "pin": true,
+    "sourceCode": "slow = new Promise((resolve) => setTimeout(() => resolve(\"Resolved after 2 seconds\"), 2000))"
+  },
+  {
+    "id": 70,
+    "pin": true,
+    "sourceCode": "brokenReference = notDefinedAnywhere + 1"
+  },
+  {
+    "id": 71,
+    "pin": true,
+    "sourceCode": "{\n  throw new Error(\"Thrown on purpose\");\n}"
+  },
+  {
+    "id": 72,
     "pin": true,
     "sourceCode": "oops = (1 +"
   }

@@ -4,7 +4,7 @@ A minimal notebook environment with many features omitted intentionally.
 
 The bundle size is &lt; 400kb and around 110kb gzpd, meant for embedding in hard to reach development environments to interactively debug and develop plugins, extensions or use standalone offline with sensitive data.
 
-Cells are compiled and run by Observable's own engine, [Notebook Kit](https://observablehq.com/notebook-kit/kit), using classic Observable JavaScript (`viewof`, `mutable`, `import … from "@user/notebook"`, `require(…)`).
+Cells are compiled and run by Observable's own engine, [Notebook Kit](https://observablehq.com/notebook-kit/kit). A cell is classic Observable JavaScript (`x = …`, `viewof`, `mutable`, `import {x} from "@user/notebook"`, `require(…)`) when it parses as one; otherwise it runs as plain JavaScript, as in Observable Notebooks 2.0: several statements, `const` declarations (visible to other cells), default/namespace imports, `import {x} from "npm:…"`, and `display(…)` for output.
 
 ## Embedding
 

@@ -56,10 +56,16 @@ const importGist = (url) =>
 const observe = (state, { autodisplay, output }) => {
   const name = output?.replace(/^initial /, '').replace(/^viewof\$/, 'viewof ');
   let inspector = null;
-  const inspect = () =>
-    (inspector ??= new Inspector(
-      state.root.appendChild(document.createElement('div')),
-    ));
+  let node = null;
+  // Cells that call display() let Kit clear state.root, which may detach our
+  // node; start a fresh one so later values and errors stay visible.
+  const inspect = () => {
+    if (!inspector || node.parentNode !== state.root) {
+      node = state.root.appendChild(document.createElement('div'));
+      inspector = new Inspector(node);
+    }
+    return inspector;
+  };
   if (autodisplay) inspect();
   return {
     _node: state.root, // used by the runtime's visibility()
@@ -69,6 +75,34 @@ const observe = (state, { autodisplay, output }) => {
     },
     rejected: (error) => inspect().rejected(error, name),
   };
+};
+
+// Cells are classic Observable JavaScript (`x = …`, `viewof`, `mutable`,
+// `import {x} from "@user/notebook"`) unless they only make sense as plain
+// JavaScript: several statements, `const`/`let` declarations, default or
+// namespace imports, `display(…)`. Try Observable JavaScript first so existing
+// notebooks behave exactly as before, and fall back to plain JavaScript.
+// `import {x} from "npm:…"` parses as both, but only works as plain JavaScript
+// (as Observable JavaScript it would be treated as a notebook import).
+const PACKAGE_IMPORT = /\bfrom\s*(["'])(npm|jsr):/;
+const compile = (source, id) => {
+  const as = (mode) => transpile({ id, value: source, mode });
+  if (PACKAGE_IMPORT.test(source)) {
+    try {
+      return as('js');
+    } catch {
+      // not valid plain JavaScript either; report the Observable error below
+    }
+  }
+  try {
+    return as('ojs');
+  } catch (error) {
+    try {
+      return as('js');
+    } catch {
+      throw error; // the Observable JavaScript error is the familiar one
+    }
+  }
 };
 
 // Every definition needs an id that is unique within the runtime; Kit uses it
@@ -86,11 +120,11 @@ export function createNotebook() {
     _: () => import('https://esm.sh/lodash-es').then((module) => module.default),
   });
 
-  // Compiles Observable JavaScript and defines it, rendering into root.
+  // Compiles a cell (see compile) and defines it, rendering into root.
   // Throws (e.g. SyntaxError) without defining anything if it does not compile.
   const run = (source, root) => {
     const id = ++nextDefinitionId;
-    const transpiled = transpile({ id, value: source, mode: 'ojs' });
+    const transpiled = compile(source, id);
     const body = new Function(
       '__importGist',
       `return (${transpiled.body.replace(GIST_IMPORT, '__importGist($1)')});`,
