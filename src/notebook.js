@@ -119,13 +119,20 @@ export const describeState = (state) => {
   const report = { status: state.status };
   if (state.name) report.name = state.name;
   if (state.status === 'fulfilled' && state.value !== undefined) report.value = describeValue(state.value);
+  // A view's current input value (`viewof x`'s x), read from the element.
+  if (state.name?.startsWith('viewof ') && state.value && 'value' in state.value) {
+    report.input = describeValue(state.value.value, 200);
+  }
   if (state.status === 'rejected') report.error = describeError(state.error);
-  // Plain JavaScript cells export their top-level declarations.
+  // Plain JavaScript cells export their top-level declarations. The runtime
+  // only computes values that something uses.
   const exports = {};
   for (const variable of state.variables) {
     if (isInternalName(variable._name) || variable._name === state.name) continue;
     exports[variable._name] =
-      variable._error !== undefined ? `Error: ${describeError(variable._error)}` : describeValue(variable._value, 200);
+      variable._error !== undefined ? `Error: ${describeError(variable._error)}`
+      : !variable._reachable && variable._value === undefined ? '(not computed: no cell uses it yet)'
+      : describeValue(variable._value, 200);
   }
   if (Object.keys(exports).length) report.exports = exports;
   const text = state.root.innerText?.replace(/\s+/g, ' ').trim();
