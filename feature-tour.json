@@ -4,8 +4,9 @@
     "pin": false,
     "sourceCode": "md`# Iridium feature tour\n\nEvery cell below is compiled and run by Observable's Notebook Kit. Edit any cell and press **Shift+Enter** (or ▶) to re-run it; cells that depend on it update automatically. **⌘S** saves. The pin icon on the left shows or hides a cell's code.`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "tjtia0",
+      "mode": "ojs",
       "body": "function(md){return(\nmd`# Iridium feature tour\n\nEvery cell below is compiled and run by Observable's Notebook Kit. Edit any cell and press **Shift+Enter** (or ▶) to re-run it; cells that depend on it update automatically. **⌘S** saves. The pin icon on the left shows or hides a cell's code.`\n)}",
       "inputs": [
         "md"
@@ -20,8 +21,9 @@
     "pin": false,
     "sourceCode": "md`## Values and reactivity`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "fm724p",
+      "mode": "ojs",
       "body": "function(md){return(\nmd`## Values and reactivity`\n)}",
       "inputs": [
         "md"
@@ -36,8 +38,9 @@
     "pin": true,
     "sourceCode": "price = 12.5",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "qw4egh",
+      "mode": "ojs",
       "body": "function price(){return(\n12.5\n)}",
       "inputs": [],
       "output": "price",
@@ -51,8 +54,9 @@
     "pin": true,
     "sourceCode": "quantity = 4",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "n9jhgr",
+      "mode": "ojs",
       "body": "function quantity(){return(\n4\n)}",
       "inputs": [],
       "output": "quantity",
@@ -66,8 +70,9 @@
     "pin": true,
     "sourceCode": "total = price * quantity",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "7wpj0y",
+      "mode": "ojs",
       "body": "function total(price,quantity){return(\nprice * quantity\n)}",
       "inputs": [
         "price",
@@ -84,8 +89,9 @@
     "pin": true,
     "sourceCode": "md`Total: **$${total.toFixed(2)}** — change \\`price\\` or \\`quantity\\` above and re-run.`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1yaurzo",
+      "mode": "ojs",
       "body": "function(md,total){return(\nmd`Total: **$${total.toFixed(2)}** — change \\`price\\` or \\`quantity\\` above and re-run.`\n)}",
       "inputs": [
         "md",
@@ -101,8 +107,9 @@
     "pin": false,
     "sourceCode": "md`## Inspecting values`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1eqj4eo",
+      "mode": "ojs",
       "body": "function(md){return(\nmd`## Inspecting values`\n)}",
       "inputs": [
         "md"
@@ -117,8 +124,9 @@
     "pin": true,
     "sourceCode": "sample = ({\n  name: \"Iridium\",\n  tags: [\"notebook\", \"observable\"],\n  nested: { depth: 2, ok: true },\n  created: new Date(2024, 0, 1),\n  lookup: new Map([[\"a\", 1], [\"b\", 2]]),\n  unique: new Set([1, 2, 3])\n})",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1t7e1yr",
+      "mode": "ojs",
       "body": "function sample(){return(\n{\n  name: \"Iridium\",\n  tags: [\"notebook\", \"observable\"],\n  nested: { depth: 2, ok: true },\n  created: new Date(2024, 0, 1),\n  lookup: new Map([[\"a\", 1], [\"b\", 2]]),\n  unique: new Set([1, 2, 3])\n}\n)}",
       "inputs": [],
       "output": "sample",
@@ -132,8 +140,9 @@
     "pin": true,
     "sourceCode": "function greet(who) {\n  return `Hello, ${who}!`;\n}",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1n0whvj",
+      "mode": "ojs",
       "body": "function greet(){return(\nfunction greet(who) {\n  return `Hello, ${who}!`;\n}\n)}",
       "inputs": [],
       "output": "greet",
@@ -147,8 +156,9 @@
     "pin": true,
     "sourceCode": "greet(\"world\")",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "jbokh1",
+      "mode": "ojs",
       "body": "function(greet){return(\ngreet(\"world\")\n)}",
       "inputs": [
         "greet"
@@ -163,8 +173,9 @@
     "pin": true,
     "sourceCode": "squares = Array.from({ length: 500 }, (_, i) => i * i)",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "180qgyt",
+      "mode": "ojs",
       "body": "function squares(){return(\nArray.from({ length: 500 }, (_, i) => i * i)\n)}",
       "inputs": [],
       "output": "squares",
@@ -178,8 +189,9 @@
     "pin": false,
     "sourceCode": "md`## Inputs and viewof`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "3sri1q",
+      "mode": "ojs",
       "body": "function(md){return(\nmd`## Inputs and viewof`\n)}",
       "inputs": [
         "md"
@@ -194,8 +206,9 @@
     "pin": true,
     "sourceCode": "viewof radius = Inputs.range([5, 60], { value: 25, step: 1, label: \"Radius\" })",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1pqy61r",
+      "mode": "ojs",
       "body": "function viewof$radius(Inputs){return(\nInputs.range([5, 60], { value: 25, step: 1, label: \"Radius\" })\n)}",
       "inputs": [
         "Inputs"
@@ -211,8 +224,9 @@
     "pin": true,
     "sourceCode": "viewof color = Inputs.select([\"steelblue\", \"tomato\", \"seagreen\", \"goldenrod\"], { label: \"Color\" })",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "12ud99",
+      "mode": "ojs",
       "body": "function viewof$color(Inputs){return(\nInputs.select([\"steelblue\", \"tomato\", \"seagreen\", \"goldenrod\"], { label: \"Color\" })\n)}",
       "inputs": [
         "Inputs"
@@ -228,8 +242,9 @@
     "pin": true,
     "sourceCode": "viewof name = Inputs.text({ label: \"Name\", value: \"Observable\" })",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1b9yagj",
+      "mode": "ojs",
       "body": "function viewof$name(Inputs){return(\nInputs.text({ label: \"Name\", value: \"Observable\" })\n)}",
       "inputs": [
         "Inputs"
@@ -245,8 +260,9 @@
     "pin": true,
     "sourceCode": "viewof shapes = Inputs.checkbox([\"circle\", \"square\"], { label: \"Shapes\", value: [\"circle\", \"square\"] })",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1c6jlam",
+      "mode": "ojs",
       "body": "function viewof$shapes(Inputs){return(\nInputs.checkbox([\"circle\", \"square\"], { label: \"Shapes\", value: [\"circle\", \"square\"] })\n)}",
       "inputs": [
         "Inputs"
@@ -262,8 +278,9 @@
     "pin": true,
     "sourceCode": "svg`<svg width=${radius * 4 + 30} height=${radius * 2 + 20}>\n  ${shapes.includes(\"circle\") ? svg`<circle cx=${radius + 10} cy=${radius + 10} r=${radius} fill=${color}></circle>` : \"\"}\n  ${shapes.includes(\"square\") ? svg`<rect x=${radius * 2 + 20} y=10 width=${radius * 2} height=${radius * 2} fill=${color}></rect>` : \"\"}\n</svg>`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "yviqfn",
+      "mode": "ojs",
       "body": "function(svg,radius,shapes,color){return(\nsvg`<svg width=${radius * 4 + 30} height=${radius * 2 + 20}>\n  ${shapes.includes(\"circle\") ? svg`<circle cx=${radius + 10} cy=${radius + 10} r=${radius} fill=${color}></circle>` : \"\"}\n  ${shapes.includes(\"square\") ? svg`<rect x=${radius * 2 + 20} y=10 width=${radius * 2} height=${radius * 2} fill=${color}></rect>` : \"\"}\n</svg>`\n)}",
       "inputs": [
         "svg",
@@ -281,8 +298,9 @@
     "pin": true,
     "sourceCode": "html`<p style=\"font-size: 1.4em\">Hi <b style=\"color: ${color}\">${name}</b>, the radius is ${radius}.</p>`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1mwcjul",
+      "mode": "ojs",
       "body": "function(html,color,name,radius){return(\nhtml`<p style=\"font-size: 1.4em\">Hi <b style=\"color: ${color}\">${name}</b>, the radius is ${radius}.</p>`\n)}",
       "inputs": [
         "html",
@@ -300,8 +318,9 @@
     "pin": false,
     "sourceCode": "md`## mutable and buttons`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1n1ndco",
+      "mode": "ojs",
       "body": "function(md){return(\nmd`## mutable and buttons`\n)}",
       "inputs": [
         "md"
@@ -316,8 +335,9 @@
     "pin": true,
     "sourceCode": "mutable clicks = 0",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "e0lmcx",
+      "mode": "ojs",
       "body": "function mutable$clicks(){return(\n0\n)}",
       "inputs": [],
       "output": "initial clicks",
@@ -331,8 +351,9 @@
     "pin": true,
     "sourceCode": "viewof bump = Inputs.button(\"Increment clicks\", { reduce: () => { mutable clicks++; } })",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1ybxzxa",
+      "mode": "ojs",
       "body": "function viewof$bump(Inputs,mutable$clicks){return(\nInputs.button(\"Increment clicks\", { reduce: () => { mutable$clicks.value++; } })\n)}",
       "inputs": [
         "Inputs",
@@ -349,8 +370,9 @@
     "pin": true,
     "sourceCode": "viewof count = Inputs.button(\"Count\", { value: 0, reduce: (n) => n + 1 })",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "y8zcsj",
+      "mode": "ojs",
       "body": "function viewof$count(Inputs){return(\nInputs.button(\"Count\", { value: 0, reduce: (n) => n + 1 })\n)}",
       "inputs": [
         "Inputs"
@@ -366,8 +388,9 @@
     "pin": true,
     "sourceCode": "md`\\`clicks\\` (mutable) is **${clicks}**; the Count button's own value is **${count}**.`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1q4r43i",
+      "mode": "ojs",
       "body": "function(md,clicks,count){return(\nmd`\\`clicks\\` (mutable) is **${clicks}**; the Count button's own value is **${count}**.`\n)}",
       "inputs": [
         "md",
@@ -384,8 +407,9 @@
     "pin": false,
     "sourceCode": "md`## Generators, time and animation`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1n461zu",
+      "mode": "ojs",
       "body": "function(md){return(\nmd`## Generators, time and animation`\n)}",
       "inputs": [
         "md"
@@ -400,8 +424,9 @@
     "pin": true,
     "sourceCode": "clock = {\n  while (true) {\n    yield new Date().toLocaleTimeString();\n    await new Promise((resolve) => setTimeout(resolve, 1000));\n  }\n}",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "wwszk9",
+      "mode": "ojs",
       "body": "async function* clock()\n{\n  while (true) {\n    yield new Date().toLocaleTimeString();\n    await new Promise((resolve) => setTimeout(resolve, 1000));\n  }\n}\n",
       "inputs": [],
       "output": "clock",
@@ -415,8 +440,9 @@
     "pin": true,
     "sourceCode": "start = Date.now()",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "gm2sld",
+      "mode": "ojs",
       "body": "function start(){return(\nDate.now()\n)}",
       "inputs": [],
       "output": "start",
@@ -430,8 +456,9 @@
     "pin": true,
     "sourceCode": "md`This notebook has been open for **${Math.floor((now - start) / 1000)}** seconds.`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1ktm5ww",
+      "mode": "ojs",
       "body": "function(md,now,start){return(\nmd`This notebook has been open for **${Math.floor((now - start) / 1000)}** seconds.`\n)}",
       "inputs": [
         "md",
@@ -448,8 +475,9 @@
     "pin": true,
     "sourceCode": "{\n  const height = 120;\n  const context = DOM.context2d(width, height);\n  while (true) {\n    const t = performance.now() / 1000;\n    context.clearRect(0, 0, width, height);\n    context.fillStyle = color;\n    for (let i = 0; i < 40; ++i) {\n      context.beginPath();\n      context.arc((i / 39) * (width - 20) + 10, height / 2 + Math.sin(t * 2 + i / 3) * 40, radius / 6, 0, 2 * Math.PI);\n      context.fill();\n    }\n    yield context.canvas;\n  }\n}",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "12mw5sr",
+      "mode": "ojs",
       "body": "function*(DOM,width,color,radius)\n{\n  const height = 120;\n  const context = DOM.context2d(width, height);\n  while (true) {\n    const t = performance.now() / 1000;\n    context.clearRect(0, 0, width, height);\n    context.fillStyle = color;\n    for (let i = 0; i < 40; ++i) {\n      context.beginPath();\n      context.arc((i / 39) * (width - 20) + 10, height / 2 + Math.sin(t * 2 + i / 3) * 40, radius / 6, 0, 2 * Math.PI);\n      context.fill();\n    }\n    yield context.canvas;\n  }\n}\n",
       "inputs": [
         "DOM",
@@ -467,8 +495,9 @@
     "pin": true,
     "sourceCode": "md`The notebook is **${width}px** wide — resize the window and the animation above follows.`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "jkgngd",
+      "mode": "ojs",
       "body": "function(md,width){return(\nmd`The notebook is **${width}px** wide — resize the window and the animation above follows.`\n)}",
       "inputs": [
         "md",
@@ -484,8 +513,9 @@
     "pin": false,
     "sourceCode": "md`## Data and charts`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "18oqxlw",
+      "mode": "ojs",
       "body": "function(md){return(\nmd`## Data and charts`\n)}",
       "inputs": [
         "md"
@@ -500,8 +530,9 @@
     "pin": true,
     "sourceCode": "viewof selected = Inputs.table(penguins, { rows: 8 })",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "ywqmsj",
+      "mode": "ojs",
       "body": "function viewof$selected(Inputs,penguins){return(\nInputs.table(penguins, { rows: 8 })\n)}",
       "inputs": [
         "Inputs",
@@ -518,8 +549,9 @@
     "pin": true,
     "sourceCode": "md`${selected.length} of ${penguins.length} penguins selected (tick rows in the table).`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1rmq4g8",
+      "mode": "ojs",
       "body": "function(md,selected,penguins){return(\nmd`${selected.length} of ${penguins.length} penguins selected (tick rows in the table).`\n)}",
       "inputs": [
         "md",
@@ -536,8 +568,9 @@
     "pin": true,
     "sourceCode": "Plot.plot({\n  width,\n  grid: true,\n  color: { legend: true },\n  marks: [\n    Plot.dot(selected.length ? selected : penguins, {\n      x: \"flipper_length_mm\",\n      y: \"body_mass_g\",\n      stroke: \"species\",\n      r: radius / 8\n    })\n  ]\n})",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "l3ianw",
+      "mode": "ojs",
       "body": "function(Plot,width,selected,penguins,radius){return(\nPlot.plot({\n  width,\n  grid: true,\n  color: { legend: true },\n  marks: [\n    Plot.dot(selected.length ? selected : penguins, {\n      x: \"flipper_length_mm\",\n      y: \"body_mass_g\",\n      stroke: \"species\",\n      r: radius / 8\n    })\n  ]\n})\n)}",
       "inputs": [
         "Plot",
@@ -556,8 +589,9 @@
     "pin": true,
     "sourceCode": "{\n  const height = 160;\n  const data = d3.range(60).map((i) => Math.sin(i / 4) * Math.cos(i / 11));\n  const x = d3.scaleLinear([0, data.length - 1], [30, width - 10]);\n  const y = d3.scaleLinear(d3.extent(data), [height - 20, 10]);\n  const svg = d3.create(\"svg\").attr(\"width\", width).attr(\"height\", height);\n  svg.append(\"path\")\n      .attr(\"fill\", \"none\")\n      .attr(\"stroke\", color)\n      .attr(\"stroke-width\", 2)\n      .attr(\"d\", d3.line((d, i) => x(i), y)(data));\n  svg.append(\"g\")\n      .attr(\"transform\", `translate(0,${height - 20})`)\n      .call(d3.axisBottom(x));\n  return svg.node();\n}",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "i82de1",
+      "mode": "ojs",
       "body": "function(d3,width,color)\n{\n  const height = 160;\n  const data = d3.range(60).map((i) => Math.sin(i / 4) * Math.cos(i / 11));\n  const x = d3.scaleLinear([0, data.length - 1], [30, width - 10]);\n  const y = d3.scaleLinear(d3.extent(data), [height - 20, 10]);\n  const svg = d3.create(\"svg\").attr(\"width\", width).attr(\"height\", height);\n  svg.append(\"path\")\n      .attr(\"fill\", \"none\")\n      .attr(\"stroke\", color)\n      .attr(\"stroke-width\", 2)\n      .attr(\"d\", d3.line((d, i) => x(i), y)(data));\n  svg.append(\"g\")\n      .attr(\"transform\", `translate(0,${height - 20})`)\n      .call(d3.axisBottom(x));\n  return svg.node();\n}\n",
       "inputs": [
         "d3",
@@ -574,8 +608,9 @@
     "pin": false,
     "sourceCode": "md`## Libraries and markup`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "ujkvu4",
+      "mode": "ojs",
       "body": "function(md){return(\nmd`## Libraries and markup`\n)}",
       "inputs": [
         "md"
@@ -590,8 +625,9 @@
     "pin": true,
     "sourceCode": "_.chunk([\"a\", \"b\", \"c\", \"d\", \"e\"], 2)",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1ve97vp",
+      "mode": "ojs",
       "body": "function(_){return(\n_.chunk([\"a\", \"b\", \"c\", \"d\", \"e\"], 2)\n)}",
       "inputs": [
         "_"
@@ -606,8 +642,9 @@
     "pin": true,
     "sourceCode": "dayjs = import(\"dayjs\").then((module) => module.default)",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "zpk2ql",
+      "mode": "ojs",
       "body": "function dayjs(){return(\nimport(\"https://esm.sh/dayjs\").then((module) => module.default)\n)}",
       "inputs": [],
       "output": "dayjs",
@@ -621,8 +658,9 @@
     "pin": true,
     "sourceCode": "dayjs().add(1, \"week\").format(\"dddd, MMMM D\")",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "ua5a74",
+      "mode": "ojs",
       "body": "function(dayjs){return(\ndayjs().add(1, \"week\").format(\"dddd, MMMM D\")\n)}",
       "inputs": [
         "dayjs"
@@ -637,8 +675,9 @@
     "pin": true,
     "sourceCode": "d3array = require(\"d3-array@3\")",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1n2jr7m",
+      "mode": "ojs",
       "body": "function d3array(require){return(\nrequire(\"d3-array@3\")\n)}",
       "inputs": [
         "require"
@@ -654,8 +693,9 @@
     "pin": true,
     "sourceCode": "d3array.median([3, 1, 4, 1, 5, 9, 2, 6])",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "9zw5v9",
+      "mode": "ojs",
       "body": "function(d3array){return(\nd3array.median([3, 1, 4, 1, 5, 9, 2, 6])\n)}",
       "inputs": [
         "d3array"
@@ -670,8 +710,9 @@
     "pin": true,
     "sourceCode": "tex`E = mc^2 \\qquad \\int_0^1 x^2\\,dx = \\tfrac{1}{3}`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1jizda",
+      "mode": "ojs",
       "body": "function(tex){return(\ntex`E = mc^2 \\qquad \\int_0^1 x^2\\,dx = \\tfrac{1}{3}`\n)}",
       "inputs": [
         "tex"
@@ -686,8 +727,9 @@
     "pin": true,
     "sourceCode": "dot`digraph { rankdir=LR; node [shape=box]; Cell -> transpile -> define -> Inspector }`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1bso5ip",
+      "mode": "ojs",
       "body": "function(dot){return(\ndot`digraph { rankdir=LR; node [shape=box]; Cell -> transpile -> define -> Inspector }`\n)}",
       "inputs": [
         "dot"
@@ -702,8 +744,9 @@
     "pin": true,
     "sourceCode": "mermaid`graph LR\n  A[Edit cell] --> B[Shift+Enter]\n  B --> C[Notebook Kit]\n  C --> D[Dependents update]`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "tcwpkw",
+      "mode": "ojs",
       "body": "function(mermaid){return(\nmermaid`graph LR\n  A[Edit cell] --> B[Shift+Enter]\n  B --> C[Notebook Kit]\n  C --> D[Dependents update]`\n)}",
       "inputs": [
         "mermaid"
@@ -718,8 +761,9 @@
     "pin": false,
     "sourceCode": "md`## Importing from Observable\n\nThese cells import live code from notebooks on [observablehq.com](https://observablehq.com).`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1uzqz2d",
+      "mode": "ojs",
       "body": "function(md){return(\nmd`## Importing from Observable\n\nThese cells import live code from notebooks on [observablehq.com](https://observablehq.com).`\n)}",
       "inputs": [
         "md"
@@ -734,8 +778,9 @@
     "pin": true,
     "sourceCode": "import {Legend, Swatches} from \"@d3/color-legend\"",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "n87emc",
+      "mode": "ojs",
       "body": "async (__variable) => {\nconst {Legend, Swatches} = await (import(\"https://api.observablehq.com/@d3/color-legend.js?v=4\").then((_) => {\n  const module = __variable._module._runtime.module(_.default);\n  const outputs = new Map(Array.from(__variable._outputs, (v) => [v._name, v]));\n  outputs.get(\"Legend\")?.import(\"Legend\", module);\n  outputs.get(\"Swatches\")?.import(\"Swatches\", module);\n  return {};\n}));\n\nreturn {Legend,Swatches};\n}",
       "inputs": [
         "@variable"
@@ -753,8 +798,9 @@
     "pin": true,
     "sourceCode": "Legend(d3.scaleSequential([0, 100], d3.interpolateViridis), { title: \"Temperature (°F)\" })",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1ov7ltu",
+      "mode": "ojs",
       "body": "function(Legend,d3){return(\nLegend(d3.scaleSequential([0, 100], d3.interpolateViridis), { title: \"Temperature (°F)\" })\n)}",
       "inputs": [
         "Legend",
@@ -770,8 +816,9 @@
     "pin": true,
     "sourceCode": "Swatches(d3.scaleOrdinal([\"blueberries\", \"oranges\", \"apples\"], d3.schemeCategory10))",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1fxmogs",
+      "mode": "ojs",
       "body": "function(Swatches,d3){return(\nSwatches(d3.scaleOrdinal([\"blueberries\", \"oranges\", \"apples\"], d3.schemeCategory10))\n)}",
       "inputs": [
         "Swatches",
@@ -787,8 +834,9 @@
     "pin": true,
     "sourceCode": "import {chart as alphabetChart} from \"@d3/bar-chart/2\"",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "4yd704",
+      "mode": "ojs",
       "body": "async (__variable) => {\nconst {chart: alphabetChart} = await (import(\"https://api.observablehq.com/@d3/bar-chart/2.js?v=4\").then((_) => {\n  const module = __variable._module._runtime.module(_.default);\n  const outputs = new Map(Array.from(__variable._outputs, (v) => [v._name, v]));\n  outputs.get(\"alphabetChart\")?.import(\"chart\", \"alphabetChart\", module);\n  return {};\n}));\n\nreturn {alphabetChart};\n}",
       "inputs": [
         "@variable"
@@ -805,8 +853,9 @@
     "pin": true,
     "sourceCode": "alphabetChart",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1qvpugu",
+      "mode": "ojs",
       "body": "function(alphabetChart){return(\nalphabetChart\n)}",
       "inputs": [
         "alphabetChart"
@@ -821,8 +870,9 @@
     "pin": true,
     "sourceCode": "nameLetters = Array.from(\n  d3.rollup(name.toUpperCase().replace(/[^A-Z]/g, \"\"), (v) => v.length, (d) => d),\n  ([letter, count]) => ({ letter, frequency: count })\n)",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1k29sbo",
+      "mode": "ojs",
       "body": "function nameLetters(d3,name){return(\nArray.from(\n  d3.rollup(name.toUpperCase().replace(/[^A-Z]/g, \"\"), (v) => v.length, (d) => d),\n  ([letter, count]) => ({ letter, frequency: count })\n)\n)}",
       "inputs": [
         "d3",
@@ -839,8 +889,9 @@
     "pin": true,
     "sourceCode": "import {chart as nameChart} with {nameLetters as data} from \"@d3/bar-chart/2\"",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "ohy2c4",
+      "mode": "ojs",
       "body": "async (__variable) => {\nconst {chart: nameChart} = await (import(\"https://api.observablehq.com/@d3/bar-chart/2.js?v=4\").then((_) => {\n  const module = __variable._module._runtime.module(_.default).derive([{name: \"nameLetters\", alias: \"data\"}], __variable._module);\n  const outputs = new Map(Array.from(__variable._outputs, (v) => [v._name, v]));\n  outputs.get(\"nameChart\")?.import(\"chart\", \"nameChart\", module);\n  return {};\n}));\n\nreturn {nameChart};\n}",
       "inputs": [
         "@variable"
@@ -857,8 +908,9 @@
     "pin": false,
     "sourceCode": "md`The same bar chart, with its \\`data\\` swapped for the letters in **${name}** (edit the Name input above):`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1j1jhx5",
+      "mode": "ojs",
       "body": "function(md,name){return(\nmd`The same bar chart, with its \\`data\\` swapped for the letters in **${name}** (edit the Name input above):`\n)}",
       "inputs": [
         "md",
@@ -874,8 +926,9 @@
     "pin": true,
     "sourceCode": "nameChart",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "fs8k0q",
+      "mode": "ojs",
       "body": "function(nameChart){return(\nnameChart\n)}",
       "inputs": [
         "nameChart"
@@ -890,8 +943,9 @@
     "pin": true,
     "sourceCode": "import {Scrubber} from \"@mbostock/scrubber\"",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "rb1hcl",
+      "mode": "ojs",
       "body": "async (__variable) => {\nconst {Scrubber} = await (import(\"https://api.observablehq.com/@mbostock/scrubber.js?v=4\").then((_) => {\n  const module = __variable._module._runtime.module(_.default);\n  const outputs = new Map(Array.from(__variable._outputs, (v) => [v._name, v]));\n  outputs.get(\"Scrubber\")?.import(\"Scrubber\", module);\n  return {};\n}));\n\nreturn {Scrubber};\n}",
       "inputs": [
         "@variable"
@@ -908,8 +962,9 @@
     "pin": true,
     "sourceCode": "viewof frame = Scrubber(d3.range(0, 101), { autoplay: false, loop: true, delay: 40 })",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1v8oj3g",
+      "mode": "ojs",
       "body": "function viewof$frame(Scrubber,d3){return(\nScrubber(d3.range(0, 101), { autoplay: false, loop: true, delay: 40 })\n)}",
       "inputs": [
         "Scrubber",
@@ -926,8 +981,9 @@
     "pin": true,
     "sourceCode": "html`<div style=\"height: 14px; width: ${frame}%; background: ${color}; border-radius: 3px\"></div>`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "n6n0fr",
+      "mode": "ojs",
       "body": "function(html,frame,color){return(\nhtml`<div style=\"height: 14px; width: ${frame}%; background: ${color}; border-radius: 3px\"></div>`\n)}",
       "inputs": [
         "html",
@@ -944,8 +1000,9 @@
     "pin": true,
     "sourceCode": "import {slider} from \"@jashkenas/inputs\"",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1qn083p",
+      "mode": "ojs",
       "body": "async (__variable) => {\nconst {slider} = await (import(\"https://api.observablehq.com/@jashkenas/inputs.js?v=4\").then((_) => {\n  const module = __variable._module._runtime.module(_.default);\n  const outputs = new Map(Array.from(__variable._outputs, (v) => [v._name, v]));\n  outputs.get(\"slider\")?.import(\"slider\", module);\n  return {};\n}));\n\nreturn {slider};\n}",
       "inputs": [
         "@variable"
@@ -962,8 +1019,9 @@
     "pin": true,
     "sourceCode": "viewof legacy = slider({ min: 0, max: 10, step: 0.5, value: 3, title: \"A classic slider from @jashkenas/inputs\" })",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "13c9fxr",
+      "mode": "ojs",
       "body": "function viewof$legacy(slider){return(\nslider({ min: 0, max: 10, step: 0.5, value: 3, title: \"A classic slider from @jashkenas/inputs\" })\n)}",
       "inputs": [
         "slider"
@@ -979,8 +1037,9 @@
     "pin": true,
     "sourceCode": "legacy * 2",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "dn722u",
+      "mode": "ojs",
       "body": "function(legacy){return(\nlegacy * 2\n)}",
       "inputs": [
         "legacy"
@@ -995,8 +1054,9 @@
     "pin": true,
     "sourceCode": "import {chart as forceGraph} from \"@d3/force-directed-graph/2\"",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "ud2ith",
+      "mode": "ojs",
       "body": "async (__variable) => {\nconst {chart: forceGraph} = await (import(\"https://api.observablehq.com/@d3/force-directed-graph/2.js?v=4\").then((_) => {\n  const module = __variable._module._runtime.module(_.default);\n  const outputs = new Map(Array.from(__variable._outputs, (v) => [v._name, v]));\n  outputs.get(\"forceGraph\")?.import(\"chart\", \"forceGraph\", module);\n  return {};\n}));\n\nreturn {forceGraph};\n}",
       "inputs": [
         "@variable"
@@ -1013,8 +1073,9 @@
     "pin": true,
     "sourceCode": "forceGraph",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1e0yfko",
+      "mode": "ojs",
       "body": "function(forceGraph){return(\nforceGraph\n)}",
       "inputs": [
         "forceGraph"
@@ -1029,8 +1090,9 @@
     "pin": false,
     "sourceCode": "md`## Plain JavaScript cells\n\nCells that aren't valid Observable JavaScript run as plain JavaScript, like Observable Notebooks 2.0: several statements, \\`const\\` declarations, standard imports, and \\`display(…)\\` to show output. Top-level declarations are available to other cells.`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "svzz71",
+      "mode": "ojs",
       "body": "function(md){return(\nmd`## Plain JavaScript cells\n\nCells that aren't valid Observable JavaScript run as plain JavaScript, like Observable Notebooks 2.0: several statements, \\`const\\` declarations, standard imports, and \\`display(…)\\` to show output. Top-level declarations are available to other cells.`\n)}",
       "inputs": [
         "md"
@@ -1045,8 +1107,9 @@
     "pin": true,
     "sourceCode": "import {sum, mean} from \"npm:d3-array\";\n\nconst scores = [72, 88, 95, 61, 84];\nconst average = mean(scores);\n\ndisplay(`Total ${sum(scores)}, average ${average.toFixed(1)}`);",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "ka5y4o",
+      "mode": "js",
       "body": "async (display) => {\nconst {sum, mean} = await import(\"https://esm.sh/d3-array\").then((module) => {\n  if (!(\"sum\" in module)) throw new SyntaxError(`export 'sum' not found`);\n  if (!(\"mean\" in module)) throw new SyntaxError(`export 'mean' not found`);\n  return module;\n});\n\nconst scores = [72, 88, 95, 61, 84];\nconst average = mean(scores);\n\ndisplay(`Total ${sum(scores)}, average ${average.toFixed(1)}`);\nreturn {sum,mean,scores,average};\n}",
       "inputs": [
         "display"
@@ -1065,8 +1128,9 @@
     "pin": true,
     "sourceCode": "md`Other cells can use them: the best score is **${Math.max(...scores)}** and the average is **${average}**.`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "i63w7n",
+      "mode": "ojs",
       "body": "function(md,scores,average){return(\nmd`Other cells can use them: the best score is **${Math.max(...scores)}** and the average is **${average}**.`\n)}",
       "inputs": [
         "md",
@@ -1083,8 +1147,9 @@
     "pin": true,
     "sourceCode": "import confetti from \"https://esm.sh/canvas-confetti@1\";\n\nconst button = html`<button>Celebrate 🎉</button>`;\nbutton.onclick = () => confetti({ particleCount: 120, spread: 70 });\ndisplay(button);",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "58w0zy",
+      "mode": "js",
       "body": "async (html,display) => {\nconst {default: confetti} = await import(\"https://esm.sh/canvas-confetti@1\").then((module) => {\n  if (!(\"default\" in module)) throw new SyntaxError(`export 'default' not found`);\n  return module;\n});\n\nconst button = html`<button>Celebrate 🎉</button>`;\nbutton.onclick = () => confetti({ particleCount: 120, spread: 70 });\ndisplay(button);\nreturn {confetti,button};\n}",
       "inputs": [
         "html",
@@ -1102,8 +1167,9 @@
     "pin": true,
     "sourceCode": "const label = `${name} picked ${color}`;\n\nfor (const size of [12, 18, 24]) {\n  display(html`<span style=\"font-size: ${size}px; color: ${color}; margin-right: 8px\">${label}</span>`);\n}",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "twxds0",
+      "mode": "js",
       "body": "(name,color,display,html) => {\nconst label = `${name} picked ${color}`;\n\nfor (const size of [12, 18, 24]) {\n  display(html`<span style=\"font-size: ${size}px; color: ${color}; margin-right: 8px\">${label}</span>`);\n}\nreturn {label};\n}",
       "inputs": [
         "name",
@@ -1122,8 +1188,9 @@
     "pin": true,
     "sourceCode": "class Counter {\n  #count = 0;\n  increment() { return ++this.#count; }\n}\n\nconst counter = new Counter();\ncounter.increment();\ndisplay(counter.increment());",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1lr1bnp",
+      "mode": "js",
       "body": "(display) => {\nclass Counter {\n  #count = 0;\n  increment() { return ++this.#count; }\n}\n\nconst counter = new Counter();\ncounter.increment();\ndisplay(counter.increment());\nreturn {Counter,counter};\n}",
       "inputs": [
         "display"
@@ -1140,8 +1207,9 @@
     "pin": false,
     "sourceCode": "md`## Async values and errors`",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "10bnrxo",
+      "mode": "ojs",
       "body": "function(md){return(\nmd`## Async values and errors`\n)}",
       "inputs": [
         "md"
@@ -1156,8 +1224,9 @@
     "pin": true,
     "sourceCode": "slow = new Promise((resolve) => setTimeout(() => resolve(\"Resolved after 2 seconds\"), 2000))",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "1lho4bd",
+      "mode": "ojs",
       "body": "function slow(){return(\nnew Promise((resolve) => setTimeout(() => resolve(\"Resolved after 2 seconds\"), 2000))\n)}",
       "inputs": [],
       "output": "slow",
@@ -1171,8 +1240,9 @@
     "pin": true,
     "sourceCode": "brokenReference = notDefinedAnywhere + 1",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "pma00b",
+      "mode": "ojs",
       "body": "function brokenReference(notDefinedAnywhere){return(\nnotDefinedAnywhere + 1\n)}",
       "inputs": [
         "notDefinedAnywhere"
@@ -1188,8 +1258,9 @@
     "pin": true,
     "sourceCode": "{\n  throw new Error(\"Thrown on purpose\");\n}",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "wcus4m",
+      "mode": "ojs",
       "body": "function()\n{\n  throw new Error(\"Thrown on purpose\");\n}\n",
       "inputs": [],
       "autodisplay": true,
@@ -1202,7 +1273,7 @@
     "pin": true,
     "sourceCode": "oops = (1 +",
     "compiled": {
-      "v": 1,
+      "v": 2,
       "hash": "9d2ea5",
       "error": "SyntaxError: Unexpected end of input (1:11)"
     }
