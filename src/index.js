@@ -42,7 +42,7 @@ const IridiumApp = ({ Ir }) => {
           title=${current}
           cells=${cells}
           onSave=${onSave}
-          onReady=${(main) => Ir.ready(main)}
+          onReady=${(main, controller) => Ir.ready(main, controller)}
           doRefresh=${refreshList}
           list=${list}
           _current=${setCurrent}
@@ -68,7 +68,10 @@ window.Iridium = {
   delete: (name) => localStorage.removeItem(name),
   get_recent: () => localStorage.getItem('IridiumRecent'),
   set_recent: (name) => (name ? localStorage.setItem('IridiumRecent', name) : false),
-  ready: (main) => {
+  // Called with the notebook's main module and its controller (edit and
+  // inspect cells from outside; see IridiumNotebook.js).
+  ready: (main, controller) => {
     window.IridiumMain = main;
+    window.IridiumController = controller;
   },
 };

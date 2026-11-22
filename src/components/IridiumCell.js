@@ -1,5 +1,6 @@
 import { html } from 'htm/preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { describeState } from '../notebook.js';
 import CodeEditor from './CodeEditor.js';
 import IridiumIconButton from './IridiumIconButton.js';
 
@@ -32,6 +33,9 @@ const IridiumCell = (props) => {
   };
 
   const runToken = useRef(0);
+  const compiling = useRef(false);
+  const errorRef = useRef(null); // the compile error, for describe()
+  errorRef.current = error;
   const onRun = async () => {
     const source = sourceCode;
     setSavedSourceCode(source);
@@ -41,6 +45,7 @@ const IridiumCell = (props) => {
     // Compiling is instant when the cell's saved record is current; otherwise
     // it loads the compiler first. Ignore results a newer run has overtaken.
     const token = ++runToken.current;
+    compiling.current = true;
     let record;
     try {
       record = await props.notebook.compile(source, props.compiled);
@@ -48,6 +53,7 @@ const IridiumCell = (props) => {
       record = { error: String(e) }; // e.g. the compiler failed to load
     }
     if (token !== runToken.current) return;
+    compiling.current = false;
     if (record.v && record !== props.compiled) props.onCompiled(record);
     if (record.error) {
       setError(record.error);
@@ -59,12 +65,36 @@ const IridiumCell = (props) => {
     try {
       run.current = { root, state: props.notebook.define(record, root) };
       setError(null);
+      props.notebook.flush();
     } catch (e) {
       root.remove();
       setError(e);
       console.warn(e);
     }
   };
+
+  // The cell's state as data, for the notebook controller (see describeState).
+  const describe = () => {
+    const source = sourceCode;
+    const report = { id: props.id, rev: props.rev ?? 0, pinned: !!props.pinned, source };
+    if (errorRef.current) return { ...report, status: 'error', error: String(errorRef.current) };
+    if (compiling.current) return { ...report, status: 'pending' };
+    if (!run.current) return { ...report, status: source.trim() ? 'pending' : 'empty' };
+    return { ...report, ...describeState(run.current.state) };
+  };
+  const describeRef = useRef(describe);
+  describeRef.current = describe;
+
+  useEffect(() => {
+    const reporter = () => describeRef.current();
+    props.register?.(props.id, reporter);
+    return () => {
+      // Unmounted (deleted, or replaced by a remote edit): drop the variables.
+      runToken.current++;
+      clear();
+      props.unregister?.(props.id, reporter);
+    };
+  }, []);
 
   // js-beautify is only needed for the Indent button; load it on first use.
   const formatCode = async () => {
