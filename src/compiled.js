@@ -2,12 +2,13 @@
 // run without loading the compiler (src/compile.js). It is only used while it
 // matches the source and the current record format.
 //
-//   { v, hash, body, inputs, outputs, output, autodisplay, autoview, automutable,
-//     summary }   // summary: highlighted HTML for import cells
+//   { v, hash, mode, body, inputs, outputs, output, autodisplay, autoview,
+//     automutable, summary }   // mode: 'ojs' or 'js'; summary: import line HTML
 //   { v, hash, error }   // the cell does not compile; error is the message
 
 // Bump when the compiler or the record shape changes, to recompile old records.
-export const FORMAT = 1;
+// 2: records carry the cell's mode ('ojs' or 'js').
+export const FORMAT = 2;
 
 // FNV-1a: a small, fast fingerprint of the source the record was built from.
 export const hashSource = (source) => {

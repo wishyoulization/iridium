@@ -16,7 +16,7 @@ import { FORMAT, hashSource } from './compiled.js';
 const PACKAGE_IMPORT = /\bfrom\s*(["'])(npm|jsr):/;
 const transpileCell = (source) => {
   // The id only names Kit's internal variables at define time, not the body.
-  const as = (mode) => transpile({ id: 1, value: source, mode });
+  const as = (mode) => ({ ...transpile({ id: 1, value: source, mode }), mode });
   if (PACKAGE_IMPORT.test(source)) {
     try {
       return as('js');
@@ -64,9 +64,9 @@ const importSummary = (source) => {
 export function compileCell(source) {
   const record = { v: FORMAT, hash: hashSource(source) };
   try {
-    const { body, inputs, outputs, output, autodisplay, autoview, automutable } =
+    const { mode, body, inputs, outputs, output, autodisplay, autoview, automutable } =
       transpileCell(source);
-    Object.assign(record, { body, inputs, outputs, output, autodisplay, autoview, automutable });
+    Object.assign(record, { mode, body, inputs, outputs, output, autodisplay, autoview, automutable });
     record.summary = importSummary(source);
   } catch (error) {
     record.error = String(error);
