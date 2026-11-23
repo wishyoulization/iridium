@@ -6,9 +6,25 @@ The startup bundle is about 95kb (31kb gzipped), meant for embedding in hard to 
 
 Cells are compiled and run by Observable's own engine, [Notebook Kit](https://observablehq.com/notebook-kit/kit). A cell is classic Observable JavaScript (`x = …`, `viewof`, `mutable`, `import {x} from "@user/notebook"`, `require(…)`) when it parses as one; otherwise it runs as plain JavaScript, as in Observable Notebooks 2.0: several statements, `const` declarations (visible to other cells), default/namespace imports, `import {x} from "npm:…"`, and `display(…)` for output.
 
+## Getting started
+
+The easiest way to use Iridium is the [Iridium Dev Server](https://github.com/wishyoulization/iridium-dev-server): it saves notebooks as files, compiles them to embeddable ES modules, and includes an MCP server and skill so AI assistants such as Claude can build notebooks with you, live, in your browser tab.
+
+```bash
+npx @wishyoulization/iridium-dev-server
+```
+
+To embed the editor yourself, install the package:
+
+```bash
+npm i @wishyoulization/iridium
+```
+
+or load it from a CDN (`https://cdn.jsdelivr.net/npm/@wishyoulization/iridium@0.1.0/dist/iridium.js`).
+
 ## Embedding
 
-`dist/` is an ES module build: copy `iridium.js` together with the `chunks/` folder, and load it as a module. It sets `window.Iridium`.
+`dist/` is an ES module build: copy `iridium.js` together with the `chunks/` folder (or use the npm package or CDN copy above), and load it as a module. It sets `window.Iridium`.
 
 ```html
 <script type="module" src="./iridium.js"></script>
