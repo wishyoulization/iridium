@@ -2,6 +2,8 @@
 
 A minimal notebook environment with many features omitted intentionally.
 
+> Published on npm as `@a10k/iridium` (previously `@wishyoulization/iridium`, 0.0.1).
+
 The startup bundle is about 95kb (31kb gzipped), meant for embedding in hard to reach development environments to interactively debug and develop plugins, extensions or use standalone offline with sensitive data. Everything else loads on first use: the compiler (only when a cell needs compiling), syntax highlighting (when an editor is visible), the formatter (Indent button) and optional libraries.
 
 Cells are compiled and run by Observable's own engine, [Notebook Kit](https://observablehq.com/notebook-kit/kit). A cell is classic Observable JavaScript (`x = …`, `viewof`, `mutable`, `import {x} from "@user/notebook"`, `require(…)`) when it parses as one; otherwise it runs as plain JavaScript, as in Observable Notebooks 2.0: several statements, `const` declarations (visible to other cells), default/namespace imports, `import {x} from "npm:…"`, and `display(…)` for output.
@@ -11,16 +13,16 @@ Cells are compiled and run by Observable's own engine, [Notebook Kit](https://ob
 The easiest way to use Iridium is the [Iridium Dev Server](https://github.com/wishyoulization/iridium-dev-server): it saves notebooks as files, compiles them to embeddable ES modules, and includes an MCP server and skill so AI assistants such as Claude can build notebooks with you, live, in your browser tab.
 
 ```bash
-npx @wishyoulization/iridium-dev-server
+npx @a10k/iridium-dev-server
 ```
 
 To embed the editor yourself, install the package:
 
 ```bash
-npm i @wishyoulization/iridium
+npm i @a10k/iridium
 ```
 
-or load it from a CDN (`https://cdn.jsdelivr.net/npm/@wishyoulization/iridium@0.1.0/dist/iridium.js`).
+or load it from a CDN (`https://cdn.jsdelivr.net/npm/@a10k/iridium@0.1.0/dist/iridium.js`).
 
 ## Embedding
 

@@ -1,5 +1,5 @@
 {
-  "name": "@wishyoulization/iridium",
+  "name": "@a10k/iridium",
   "version": "0.1.0",
   "description": "Simple notebook editor",
   "main": "dist/iridium.js",
@@ -19,7 +19,7 @@
   "keywords": [
     "notebook"
   ],
-  "author": "wishyoulization",
+  "author": "a10k",
   "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.3",
