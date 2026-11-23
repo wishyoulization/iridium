@@ -1,6 +1,6 @@
 {
   "name": "@a10k/iridium",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Simple notebook editor",
   "main": "dist/iridium.js",
   "scripts": {

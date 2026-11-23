@@ -2,7 +2,7 @@
 
 A minimal notebook environment with many features omitted intentionally.
 
-> Published on npm as `@a10k/iridium` (previously `@wishyoulization/iridium`, 0.0.1).
+> Published on npm as `@a10k/iridium` (previously `@wishyoulization/iridium`).
 
 The startup bundle is about 95kb (31kb gzipped), meant for embedding in hard to reach development environments to interactively debug and develop plugins, extensions or use standalone offline with sensitive data. Everything else loads on first use: the compiler (only when a cell needs compiling), syntax highlighting (when an editor is visible), the formatter (Indent button) and optional libraries.
 
@@ -22,7 +22,7 @@ To embed the editor yourself, install the package:
 npm i @a10k/iridium
 ```
 
-or load it from a CDN (`https://cdn.jsdelivr.net/npm/@a10k/iridium@0.1.0/dist/iridium.js`).
+or load it from a CDN (`https://cdn.jsdelivr.net/npm/@a10k/iridium@0.0.1/dist/iridium.js`).
 
 ## Embedding
 
