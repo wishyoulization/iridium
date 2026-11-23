@@ -1,7 +1,7 @@
 // Iridium's notebook backend: Observable Notebook Kit's runtime runs cells.
 // Compiling is separate (src/compile.js, loaded on demand) so notebooks whose
 // cells carry a current compiled record never download the compiler.
-import { NotebookRuntime, library } from '@observablehq/notebook-kit/runtime';
+import { FileAttachment, NotebookRuntime, library } from '@observablehq/notebook-kit/runtime';
 import { Inspector } from '@observablehq/inspector';
 import { require as classicRequire } from 'd3-require';
 import { html, svg } from './classic-template.js';
@@ -21,8 +21,8 @@ const importGist = (url) =>
     );
 
 // Local notebook imports ("./other.js", "../x.js", "/x.js") are relative to
-// the page's URL (not document.baseURI: the dev server sets <base> to the
-// notebook's attachments folder). import() in a cell body would otherwise
+// the page's URL (not document.baseURI, which a page's <base> may point
+// elsewhere, as dev server 0.0.2 did). import() in a cell body would otherwise
 // resolve against Iridium's own script URL (e.g. a CDN), so make them
 // absolute first.
 const LOCAL_IMPORT = /\bimport\(("\.{0,2}\/[^"]*")\)/g;
@@ -165,6 +165,11 @@ export function createNotebook() {
     // Literal versions remain available as htl.html and htl.svg.
     html: () => html,
     svg: () => svg,
+    // FileAttachment("x") resolves against Iridium.files_base when the page
+    // sets it (e.g. the dev server's per-notebook files folder), so the page
+    // needs no <base> and other relative URLs keep resolving against the page.
+    FileAttachment: () => (name) =>
+      FileAttachment(name, new URL(window.Iridium?.files_base ?? '', document.baseURI).href),
   });
 
   // Resolves to the compiled record for source: the given record if it is

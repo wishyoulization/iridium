@@ -40,6 +40,8 @@ or load it from a CDN (`https://cdn.jsdelivr.net/npm/@a10k/iridium@0.0.2/dist/ir
 
 Startup needs no network. Optional libraries (`d3`, `Plot`, `Inputs`, `require(…)`, notebook imports, …) load from a CDN the first time a cell uses them.
 
+`FileAttachment("x")` resolves against the page's base URL. To keep a notebook's files elsewhere, set `Iridium.files_base` (e.g. `Iridium.files_base = "/files/my-notebook/"`) before the notebook loads; other relative URLs still resolve against the page.
+
 ### Fast, view-only embeds
 
 Saved cells keep a compiled record (`compiled`) next to their `sourceCode`. When every cell's record matches its source, the notebook runs without downloading the compiler; with editors hidden (add the `IridiumViewOnly` class to `<body>`), syntax highlighting is never loaded either. Save a notebook once from the editor to store the records; notebooks without them (or with edited sources) are compiled on load as before. Custom `Iridium.save`/`Iridium.load` implementations should keep the `compiled` field.

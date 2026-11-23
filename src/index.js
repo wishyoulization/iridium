@@ -68,6 +68,9 @@ window.Iridium = {
   delete: (name) => localStorage.removeItem(name),
   get_recent: () => localStorage.getItem('IridiumRecent'),
   set_recent: (name) => (name ? localStorage.setItem('IridiumRecent', name) : false),
+  // Where FileAttachment("x") looks for files (a URL, e.g. "/files/"). Unset:
+  // the page's base URL.
+  files_base: undefined,
   // Called with the notebook's main module and its controller (edit and
   // inspect cells from outside; see IridiumNotebook.js).
   ready: (main, controller) => {
