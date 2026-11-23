@@ -3,14 +3,15 @@
 // matches the source and the current record format.
 //
 //   { v, hash, mode, body, inputs, outputs, output, autodisplay, autoview,
-//     automutable, summary }   // mode: 'ojs' or 'js'; summary: import line HTML
+//     automutable, summary }   // mode: 'ojs', 'js' or 'ts'; summary: import line HTML
 //   { v, hash, error }   // the cell does not compile; error is the message
 
 // Bump when the compiler or the record shape changes, to recompile old records.
 // 2: records carry the cell's mode ('ojs' or 'js').
 // 3: local notebook imports ("./other.js") stay local instead of going to
 //    api.observablehq.com.
-export const FORMAT = 3;
+// 4: TypeScript cells compile (mode 'ts') instead of failing.
+export const FORMAT = 4;
 
 // FNV-1a: a small, fast fingerprint of the source the record was built from.
 export const hashSource = (source) => {

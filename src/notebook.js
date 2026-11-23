@@ -202,7 +202,7 @@ export function createNotebook() {
     };
     // display()/view() are Notebooks 2.0 built-ins for plain JavaScript cells;
     // in Observable JavaScript they are ordinary names (e.g. an imported view).
-    notebook.define(state, { ...record, id, body, display: record.mode === 'js' }, observe);
+    notebook.define(state, { ...record, id, body, display: record.mode !== 'ojs' }, observe);
     return state;
   };
 

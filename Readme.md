@@ -6,7 +6,7 @@ A minimal notebook environment with many features omitted intentionally.
 
 The startup bundle is about 95kb (31kb gzipped), meant for embedding in hard to reach development environments to interactively debug and develop plugins, extensions or use standalone offline with sensitive data. Everything else loads on first use: the compiler (only when a cell needs compiling), syntax highlighting (when an editor is visible), the formatter (Indent button) and optional libraries.
 
-Cells are compiled and run by Observable's own engine, [Notebook Kit](https://observablehq.com/notebook-kit/kit). A cell is classic Observable JavaScript (`x = …`, `viewof`, `mutable`, `import {x} from "@user/notebook"`, `require(…)`) when it parses as one; otherwise it runs as plain JavaScript, as in Observable Notebooks 2.0: several statements, `const` declarations (visible to other cells), default/namespace imports, `import {x} from "npm:…"`, and `display(…)` for output.
+Cells are compiled and run by Observable's own engine, [Notebook Kit](https://observablehq.com/notebook-kit/kit). A cell is classic Observable JavaScript (`x = …`, `viewof`, `mutable`, `import {x} from "@user/notebook"`, `require(…)`) when it parses as one; otherwise it runs as plain JavaScript, as in Observable Notebooks 2.0: several statements, `const` declarations (visible to other cells), default/namespace imports, `import {x} from "npm:…"`, and `display(…)` for output. Plain JavaScript cells may also use TypeScript syntax (type annotations, interfaces, `type` aliases): the types are removed and the cell runs as JavaScript, without type checking.
 
 ## Getting started
 

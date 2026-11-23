@@ -28,21 +28,6 @@ export default css;`,
   },
 });
 
-// Notebook Kit always builds a TypeScript-capable parser, but Iridium only
-// compiles Observable JavaScript ('ojs' cells). Stub the ~190 KB TS plugin out;
-// a TypeScript cell would fail with a clear error instead of misparsing.
-const NO_TYPESCRIPT = '\0no-typescript';
-const noTypeScript = () => ({
-  name: 'no-typescript',
-  resolveId: (id) => (id === '@sveltejs/acorn-typescript' ? NO_TYPESCRIPT : null),
-  load: (id) =>
-    id === NO_TYPESCRIPT
-      ? `export const tsPlugin = () => (Parser) => class extends Parser {
-  constructor() { throw new SyntaxError('TypeScript cells are not supported'); }
-};`
-      : null,
-});
-
 // Chunk names are content-hashed, so clear out the previous build's chunks.
 const cleanChunks = () => ({
   name: 'clean-chunks',
@@ -73,7 +58,6 @@ export default {
   },
   plugins: [
     cleanChunks(),
-    noTypeScript(),
     nodeResolve({
       browser: true,
     }),

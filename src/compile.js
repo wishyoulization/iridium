@@ -10,7 +10,8 @@ import { FORMAT, hashSource } from './compiled.js';
 // `import {x} from "@user/notebook"`) unless they only make sense as plain
 // JavaScript: several statements, `const`/`let` declarations, default or
 // namespace imports, `display(…)`. Try Observable JavaScript first so existing
-// notebooks behave exactly as before, and fall back to plain JavaScript.
+// notebooks behave exactly as before, then plain JavaScript, then TypeScript
+// (type annotations are removed and the cell runs as plain JavaScript).
 // `import {x} from "npm:…"` parses as both, but only works as plain JavaScript
 // (as Observable JavaScript it would be treated as a notebook import).
 const PACKAGE_IMPORT = /\bfrom\s*(["'])(npm|jsr):/;
@@ -27,11 +28,14 @@ const transpileCell = (source) => {
   try {
     return as('ojs');
   } catch (error) {
-    try {
-      return as('js');
-    } catch {
-      throw error; // the Observable JavaScript error is the familiar one
+    for (const mode of ['js', 'ts']) {
+      try {
+        return as(mode);
+      } catch {
+        // try the next mode
+      }
     }
+    throw error; // the Observable JavaScript error is the familiar one
   }
 };
 
