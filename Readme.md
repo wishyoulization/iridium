@@ -22,7 +22,7 @@ To embed the editor yourself, install the package:
 npm i @a10k/iridium
 ```
 
-or load it from a CDN (`https://cdn.jsdelivr.net/npm/@a10k/iridium@0.0.3/dist/iridium.js`).
+or load it from a CDN (`https://cdn.jsdelivr.net/npm/@a10k/iridium@0.0.4/dist/iridium.js`).
 
 ## Embedding
 
