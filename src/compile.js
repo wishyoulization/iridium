@@ -35,6 +35,16 @@ const transpileCell = (source) => {
   }
 };
 
+// Notebook Kit sends every notebook import without a protocol to
+// api.observablehq.com, including local paths: `import {x} from "./other.js"`
+// becomes import("https://api.observablehq.com/./other.js.js?v=4"). Iridium
+// has always imported local paths ("./", "../", "/") as written, e.g. a
+// sibling notebook's compiled module on the dev server, so undo that.
+const LOCAL_IMPORT =
+  /\bimport\("https:\/\/api\.observablehq\.com\/(\.{0,2}\/[^"]*?)\.js\?v=\d+"\)/g;
+const keepLocalImports = (body) =>
+  body.replace(LOCAL_IMPORT, (_, path) => `import(${JSON.stringify(path)})`);
+
 // Import cells display nothing in Notebook Kit. Iridium has always shown the
 // resolved import as a highlighted line, e.g.
 //   import {Legend as Legend} from "@d3/color-legend"
@@ -66,7 +76,7 @@ export function compileCell(source) {
   try {
     const { mode, body, inputs, outputs, output, autodisplay, autoview, automutable } =
       transpileCell(source);
-    Object.assign(record, { mode, body, inputs, outputs, output, autodisplay, autoview, automutable });
+    Object.assign(record, { mode, body: keepLocalImports(body), inputs, outputs, output, autodisplay, autoview, automutable });
     record.summary = importSummary(source);
   } catch (error) {
     record.error = String(error);

@@ -20,6 +20,13 @@ const importGist = (url) =>
       import(URL.createObjectURL(new Blob([js], { type: 'text/javascript' }))),
     );
 
+// Local notebook imports ("./other.js", "../x.js", "/x.js") are relative to
+// the page's URL (not document.baseURI: the dev server sets <base> to the
+// notebook's attachments folder). import() in a cell body would otherwise
+// resolve against Iridium's own script URL (e.g. a CDN), so make them
+// absolute first.
+const LOCAL_IMPORT = /\bimport\(("\.{0,2}\/[^"]*")\)/g;
+
 // Kit's default observer appends DOM values bare and has no running state.
 // Iridium has always rendered every value through an Inspector node
 // (div.observablehq), which its CSS uses for spacing and the running/error
@@ -172,7 +179,9 @@ export function createNotebook() {
     // previous value, undefined on the first run (sloppy mode makes it window).
     const body = new Function(
       '__importGist',
-      `"use strict"; return (${record.body.replace(GIST_IMPORT, '__importGist($1)')});`,
+      `"use strict"; return (${record.body
+        .replace(GIST_IMPORT, '__importGist($1)')
+        .replace(LOCAL_IMPORT, 'import(new URL($1, location.href).href)')});`,
     )(importGist);
     if (record.summary) {
       const summary = root.appendChild(document.createElement('div'));

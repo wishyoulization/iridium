@@ -8,7 +8,9 @@
 
 // Bump when the compiler or the record shape changes, to recompile old records.
 // 2: records carry the cell's mode ('ojs' or 'js').
-export const FORMAT = 2;
+// 3: local notebook imports ("./other.js") stay local instead of going to
+//    api.observablehq.com.
+export const FORMAT = 3;
 
 // FNV-1a: a small, fast fingerprint of the source the record was built from.
 export const hashSource = (source) => {
